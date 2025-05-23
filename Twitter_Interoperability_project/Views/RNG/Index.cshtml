@@ -52,7 +52,8 @@
             <label class="validator-label" for="rngData">XML schema (RNG) data</label>
             <textarea id="rngData" name="RngData" class="validator-textarea">@Model.RngData</textarea>
         </div>
-        <button type="submit" class="btn btn-primary" style="float:right;">Validate</button>
+        <button type="submit" name="submit" value="Validate" class="btn btn-primary" style="float:right;">Validate</button>
+        <button type="submit" name="submit" value="Sample" class="btn btn-secondary">Sample Data</button>
         <div style="clear:both;"></div>
     </form>
 
@@ -61,6 +62,20 @@
         <div class="validator-result">
             @Html.Raw(Model.Result)
         </div>
+    }
+
+    @if (ViewBag.JobPostings != null && ((List<Twitter_Interoperability_project.Models.JobPosting>)ViewBag.JobPostings).Any())
+    {
+        <h3>Saved Job Postings:</h3>
+        <ul>
+            @foreach (var job in (List<Twitter_Interoperability_project.Models.JobPosting>)ViewBag.JobPostings)
+            {
+                <li>
+                    <b>@job.Title</b> (@job.Id) - @job.CompanyName<br />
+                    <small>@job.Location, @job.SeniorityLevel, @job.Team</small>
+                </li>
+            }
+        </ul>
     }
 </div>
 

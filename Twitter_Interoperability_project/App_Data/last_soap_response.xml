@@ -1,0 +1,18 @@
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <s:Body>
+    <SearchJobPostingsResponse xmlns="http://tempuri.org/">
+      <SearchJobPostingsResult>&lt;SearchResults&gt;
+  &lt;JobPosting&gt;
+    &lt;Id&gt;1926008538024845510&lt;/Id&gt;
+    &lt;Title&gt;@iquilezles They're also quite good at doing analysis in python, if you need that.&lt;/Title&gt;
+    &lt;CompanyName&gt;Cornus Ammonis&lt;/CompanyName&gt;
+    &lt;Location&gt;&lt;/Location&gt;
+    &lt;JobDescription&gt;@iquilezles They're also quite good at doing analysis in python, if you need that.&lt;/JobDescription&gt;
+    &lt;JobPageUrl&gt;https://x.com/cornusammonis/status/1926008538024845510&lt;/JobPageUrl&gt;
+    &lt;ExternalUrl&gt;https://x.com/cornusammonis/status/1926008538024845510&lt;/ExternalUrl&gt;
+    &lt;CompanyLogoUrl&gt;https://pbs.twimg.com/profile_images/875381731062317057/jmHnenRL_normal.jpg&lt;/CompanyLogoUrl&gt;
+  &lt;/JobPosting&gt;
+&lt;/SearchResults&gt;</SearchJobPostingsResult>
+    </SearchJobPostingsResponse>
+  </s:Body>
+</s:Envelope>

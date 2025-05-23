@@ -1,3 +1,4 @@
+using SoapCore;
 using Twitter_Interoperability_project.Interfaces;
 using Twitter_Interoperability_project.Service;
 
@@ -7,7 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 //builder.Services.AddSoapCore();
 builder.Services.AddScoped<TwitterXmlService>();
-builder.Services.AddScoped<ITwitterSoapService, TwitterSoapService>();
+builder.Services.AddScoped<IJobPostingSoapService, JobPostingSoapService>();
+
+builder.Services.AddSoapCore();
+
 
 builder.Configuration.AddJsonFile("appsettings.json");
 
@@ -26,6 +30,18 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Add this after UseRouting, before MapControllerRoute and Run
+app.UseEndpoints(endpoints =>
+{
+    endpoints.UseSoapEndpoint<IJobPostingSoapService>(
+        "/JobPostingSoap.svc",
+        new SoapCore.SoapEncoderOptions(),
+        SoapCore.SoapSerializer.XmlSerializer
+    );
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+});
 
 
 app.UseAuthorization();

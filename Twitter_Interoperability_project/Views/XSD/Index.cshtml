@@ -63,13 +63,16 @@
             @Html.Raw(Model.Result)
         </div>
     }
-    @if (_jobPostings.Any())
+    @if (ViewBag.JobPostings != null && ((List<Twitter_Interoperability_project.Models.JobPosting>)ViewBag.JobPostings).Any())
     {
         <h3>Saved Job Postings:</h3>
         <ul>
-            @foreach (var job in _jobPostings)
+            @foreach (var job in (List<Twitter_Interoperability_project.Models.JobPosting>)ViewBag.JobPostings)
             {
-                <li>@job.Title (@job.Id)</li>
+                <li>
+                    <b>@job.Title</b> (@job.Id) - @job.CompanyName<br />
+                    <small>@job.Location, @job.SeniorityLevel, @job.Team</small>
+                </li>
             }
         </ul>
     }

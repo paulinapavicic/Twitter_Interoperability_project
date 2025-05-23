@@ -5,7 +5,7 @@ namespace Twitter_Interoperability_project.Interfaces
 {
     public interface IWeatherService : IXmlRpcProxy
     {
-        [XmlRpcMethod("getTemperature")]
+        [XmlRpcMethod("Weather.getTemperature")]
         CityTemp[] GetTemperature(string cityPart);
     }
 }
