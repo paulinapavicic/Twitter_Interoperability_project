@@ -4,3 +4,108 @@
 @{
     ViewData["Title"] = "REST API";
 }
+<h2>JobPosting REST Client</h2>
+
+<form asp-action="GetBySkill" method="post">
+    <label>Skill / Technology / Company:</label>
+    <input type="text" name="skill" required />
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+@if (ViewBag.JobInfo != null)
+{
+    <h4>Job Results:</h4>
+    <pre>@ViewBag.JobInfo</pre>
+}
+
+@if (ViewBag.RestResult != null)
+{
+    <h5>Raw JSON (for debugging):</h5>
+    <textarea class="form-control" rows="10" readonly>@ViewBag.RestResult</textarea>
+}
+
+<hr />
+
+<h2 class="mt-4 mb-3">Local JobPosting CRUD</h2>
+
+<div class="row">
+    <!-- POST (Create) -->
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">Create (POST)</div>
+            <div class="card-body">
+                <form asp-action="PostJob" method="post">
+                    <label>New Job (JSON):</label>
+                    <textarea name="jsonData" rows="8" class="form-control mb-2" required></textarea>
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-success">Create</button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="insertSampleJson('post')">Sample JSON</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- PUT (Update) -->
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">Update (PUT)</div>
+            <div class="card-body">
+                <form asp-action="PutJob" method="post">
+                    <label>Update Job by ID:</label>
+                    <input type="text" name="id" class="form-control mb-2" placeholder="Job ID" required />
+                    <textarea name="jsonData" rows="8" class="form-control mb-2" required></textarea>
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-warning">Update</button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="insertSampleJson('put')">Sample JSON</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE -->
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">Delete (DELETE)</div>
+            <div class="card-body">
+                <form asp-action="DeleteJob" method="post">
+                    <label>Delete Job by ID:</label>
+                    <input type="text" name="id" class="form-control mb-2" placeholder="Job ID" required />
+                    <button type="submit" class="btn btn-danger w-100">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.LocalApiResult != null)
+{
+    <h4>Result from Local API:</h4>
+    <pre>@ViewBag.LocalApiResult</pre>
+}
+
+@section Scripts {
+    <script>
+        function insertSampleJson(formType) {
+            const sample = `{
+          "id": "1",
+          "restId": "123",
+          "title": "Senior Python Developer",
+          "externalUrl": "https://example.com",
+          "jobDescription": "Develop and maintain Python applications.",
+          "jobPageUrl": "https://example.com/job",
+          "location": "Belgium",
+          "locationType": "Remote",
+          "seniorityLevel": "Senior",
+          "team": "Development",
+          "companyName": "Devoteam",
+          "companyLogoUrl": "https://example.com/logo.png"
+        }`;
+            if (formType === 'post') {
+                document.getElementsByName('jsonData')[0].value = sample;
+            } else if (formType === 'put') {
+                document.getElementsByName('jsonData')[1].value = sample;
+            }
+        }
+    </script>
+}

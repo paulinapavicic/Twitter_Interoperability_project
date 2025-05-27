@@ -10,10 +10,12 @@
     <PackageReference Include="Horizon.XmlRpc.Core" Version="2.5.2" />
     <PackageReference Include="Horizon.XmlRpc.Server" Version="2.5.2" />
     <PackageReference Include="Kveer.XmlRPC" Version="1.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.14" />
     <PackageReference Include="Minio" Version="6.0.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="RelaxNG" Version="3.2.3" />
     <PackageReference Include="SoapCore" Version="1.2.1.8" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.11.0" />
   </ItemGroup>
 
 </Project>
