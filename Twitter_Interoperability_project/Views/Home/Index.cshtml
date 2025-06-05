@@ -6,15 +6,3 @@
     <h1 class="display-4">Welcome to the Interoperability project </h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
-<div>IsAuthenticated: @User.Identity.IsAuthenticated</div>
-<div>User: @User.Identity.Name</div>
-@if (User.Identity.IsAuthenticated)
-{
-
-    <h3>Welcome, @User.Identity.Name!</h3>
-    <p>IsAuthenticated: @User.Identity.IsAuthenticated</p>
-}
-else
-{
-    <h3>Not logged in!</h3>
-}

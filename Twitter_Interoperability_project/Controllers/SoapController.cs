@@ -17,7 +17,9 @@ namespace Twitter_Interoperability_project.Controllers
         [HttpPost]
         public async Task<IActionResult> SearchSoap(string term)
         {
-            var soapEnvelope = $@"<?xml version=""1.0"" encoding=""utf-8""?>
+            try
+            {
+                var soapEnvelope = $@"<?xml version=""1.0"" encoding=""utf-8""?>
 <soap:Envelope xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance""
                xmlns:xsd=""http://www.w3.org/2001/XMLSchema""
                xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/"">
@@ -36,7 +38,7 @@ namespace Twitter_Interoperability_project.Controllers
             var response = await client.PostAsync($"{baseUrl}/JobPostingSoap.svc", content);
             var soapResponse = await response.Content.ReadAsStringAsync();
 
-            // <--- ADD THIS LINE HERE
+       
             System.IO.File.WriteAllText("App_Data/last_soap_response.xml", soapResponse);
 
            
@@ -57,9 +59,20 @@ namespace Twitter_Interoperability_project.Controllers
 
             ViewBag.JobPostings = jobPostings;
             ViewBag.SearchTerm = term;
-            ViewBag.SoapResultsXml = searchResultsNode != null ? searchResultsNode.ToString() : "No results found or error in SOAP response.";
+                ViewBag.SoapResultsXml = searchResultsNode != null ? searchResultsNode.ToString() : "No results found or error in SOAP response.";
 
-            return View("Index");
+                if (jobPostings != null && jobPostings.Any())
+                    ViewBag.SoapMessage = "Search completed successfully!";
+                else
+                    ViewBag.SoapError = "No job postings found for the given term.";
+
+                return View("Index");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.SoapError = "An error occurred during SOAP search: " + ex.Message;
+                return View("Index");
+            }
         }
 
 
@@ -67,7 +80,15 @@ namespace Twitter_Interoperability_project.Controllers
         [HttpPost]
         public async Task<IActionResult> GenerateXml(string query)
         {
-            await _twitterXmlService.GenerateJobPostingsXml(query);
+            try
+            {
+                await _twitterXmlService.GenerateJobPostingsXml(query);
+                TempData["XmlMessage"] = "XML generated successfully!";
+            }
+            catch (Exception ex)
+            {
+                TempData["XmlError"] = "An error occurred while generating XML: " + ex.Message;
+            }
             return RedirectToAction("Index");
         }
 

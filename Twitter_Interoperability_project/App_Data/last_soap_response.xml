@@ -3,14 +3,18 @@
     <SearchJobPostingsResponse xmlns="http://tempuri.org/">
       <SearchJobPostingsResult>&lt;SearchResults&gt;
   &lt;JobPosting&gt;
-    &lt;Id&gt;1926008538024845510&lt;/Id&gt;
-    &lt;Title&gt;@iquilezles They're also quite good at doing analysis in python, if you need that.&lt;/Title&gt;
-    &lt;CompanyName&gt;Cornus Ammonis&lt;/CompanyName&gt;
-    &lt;Location&gt;&lt;/Location&gt;
-    &lt;JobDescription&gt;@iquilezles They're also quite good at doing analysis in python, if you need that.&lt;/JobDescription&gt;
-    &lt;JobPageUrl&gt;https://x.com/cornusammonis/status/1926008538024845510&lt;/JobPageUrl&gt;
-    &lt;ExternalUrl&gt;https://x.com/cornusammonis/status/1926008538024845510&lt;/ExternalUrl&gt;
-    &lt;CompanyLogoUrl&gt;https://pbs.twimg.com/profile_images/875381731062317057/jmHnenRL_normal.jpg&lt;/CompanyLogoUrl&gt;
+    &lt;Id&gt;1929246858741772543&lt;/Id&gt;
+    &lt;Title&gt;That’s how I cried to my python teacher today, omo my period be disgracing me. 
+
+He bought me burgers tho😩&lt;/Title&gt;
+    &lt;CompanyName&gt;KiKi_h&lt;/CompanyName&gt;
+    &lt;Location&gt;Everywhere&lt;/Location&gt;
+    &lt;JobDescription&gt;That’s how I cried to my python teacher today, omo my period be disgracing me. 
+
+He bought me burgers tho😩&lt;/JobDescription&gt;
+    &lt;JobPageUrl&gt;https://x.com/_hbecca/status/1929246858741772543&lt;/JobPageUrl&gt;
+    &lt;ExternalUrl&gt;https://x.com/_hbecca/status/1929246858741772543&lt;/ExternalUrl&gt;
+    &lt;CompanyLogoUrl&gt;https://pbs.twimg.com/profile_images/1667952696970584068/ZW9xLsKE_normal.jpg&lt;/CompanyLogoUrl&gt;
   &lt;/JobPosting&gt;
 &lt;/SearchResults&gt;</SearchJobPostingsResult>
     </SearchJobPostingsResponse>

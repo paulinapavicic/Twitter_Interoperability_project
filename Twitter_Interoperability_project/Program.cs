@@ -45,6 +45,8 @@ builder.Services.AddAuthentication(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+
 //builder.Services.AddSoapCore();
 builder.Services.AddScoped<TwitterXmlService>();
 builder.Services.AddScoped<IJobPostingSoapService, JobPostingSoapService>();

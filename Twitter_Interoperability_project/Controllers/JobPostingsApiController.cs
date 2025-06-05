@@ -10,6 +10,14 @@ namespace Twitter_Interoperability_project.Controllers
         // In-memory storage for demo purposes
         private static List<JobPosting> JobPostings = new List<JobPosting>();
 
+        // GET: api/jobpostings
+        [HttpGet]
+        public ActionResult<IEnumerable<JobPosting>> GetAll()
+        {
+            return Ok(JobPostings);
+        }
+
+
         // GET: api/jobpostings/{id}
         [HttpGet("{id}")]
         public ActionResult<JobPosting> Get(string id)
@@ -23,7 +31,12 @@ namespace Twitter_Interoperability_project.Controllers
         [HttpPost]
         public ActionResult<JobPosting> Create([FromBody] JobPosting job)
         {
-            if (job == null) return BadRequest();
+            if (job == null)
+                return BadRequest();
+
+            if (!string.IsNullOrEmpty(job.Id) && JobPostings.Any(j => j.Id == job.Id))
+                return Conflict($"JobPosting with Id '{job.Id}' already exists.");
+
             job.Id = job.Id ?? Guid.NewGuid().ToString();
             JobPostings.Add(job);
             return CreatedAtAction(nameof(Get), new { id = job.Id }, job);

@@ -35,5 +35,23 @@
             <textarea class="form-control" rows="10" readonly>@ViewBag.SoapResultsXml</textarea>
         }
 
+        @if (ViewBag.SoapMessage != null)
+        {
+            <div class="alert alert-success">@ViewBag.SoapMessage</div>
+        }
+        @if (ViewBag.SoapError != null)
+        {
+            <div class="alert alert-danger">@ViewBag.SoapError</div>
+        }
+        @if (TempData["XmlMessage"] != null)
+        {
+            <div class="alert alert-success">@TempData["XmlMessage"]</div>
+        }
+        @if (TempData["XmlError"] != null)
+        {
+            <div class="alert alert-danger">@TempData["XmlError"]</div>
+        }
+
+
     </div>
 </div>
