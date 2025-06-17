@@ -9,21 +9,16 @@ namespace Twitter_Interoperability_project.Controllers
 {
     public class RestController : Controller
     {
-        
-        private readonly string apiUrl = "https://twitter241.p.rapidapi.com/search/";
+
+        private readonly string apiUrl = "https://twitter154.p.rapidapi.com/user/tweets";
         private readonly string apiKey = "f0c3be805emsh767cbcd3c6c4040p18cb0ejsndcda90a0978b";
-        private readonly string apiHost = "twitter241.p.rapidapi.com";
+        private readonly string apiHost = "twitter154.p.rapidapi.com";
+      
+        private const string dataPath = "App_Data/twitterusers.json";
 
-        
-        private readonly string localApiUrl = "https://localhost:7186/api/twitterusers";
-
-        // Use absolute path for data file
-        private readonly string dataPath = Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory, "App_Data", "twitterusers.json"
-        );
 
         [HttpPost]
-        public async Task<IActionResult> ImportJsonFromApi()
+        public async Task<IActionResult> ImportJson(string username)
         {
             try
             {
@@ -32,223 +27,138 @@ namespace Twitter_Interoperability_project.Controllers
                     client.DefaultRequestHeaders.Add("X-RapidAPI-Key", apiKey);
                     client.DefaultRequestHeaders.Add("X-RapidAPI-Host", apiHost);
 
-                    var url = $"{apiUrl}?query=developer&type=Latest&count=20";
+                    var url = $"{apiUrl}?username={Uri.EscapeDataString(username)}";
                     var response = await client.GetAsync(url);
                     var json = await response.Content.ReadAsStringAsync();
 
-                    // Save raw API response for debugging
-                    Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data"));
-                    System.IO.File.WriteAllText(
-                        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data", "last_api_response.json"),
-                        json
-                    );
+                   
+                    var apiResponse = JObject.Parse(json);
+                    var users = apiResponse["results"]? 
+                        .Select(t => t["user"]?.ToObject<TwitterUser>())
+                        .Where(u => u != null)
+                        .ToList();
 
-                    // Parse users from API response
-                    var apiUsers = ParseTwitterApiResponse(json);
-
-                    ViewBag.JobInfo = $"Parsed {apiUsers.Count} users from API. ";
-
-                    // Import users into your local JSON file via API
-                    var importResponse = await client.PostAsync(
-                        $"{localApiUrl}/import",
-                        new StringContent(JsonConvert.SerializeObject(apiUsers), Encoding.UTF8, "application/json")
-                    );
-                        
-                    var importResult = await importResponse.Content.ReadAsStringAsync();
-
-                    if (importResponse.IsSuccessStatusCode && apiUsers.Count > 0)
+                    if (users == null || users.Count == 0)
                     {
-                        TempData["JsonImported"] = true;
-                        ViewBag.JobInfo += "Import successful. CRUD is now enabled.";
+                        ViewBag.JobInfo = "No user data found in the response.";
+                        return View("Index");
                     }
-                    else
-                    {
-                        TempData["JsonImported"] = false;
-                        ViewBag.JobInfo += $"Import failed! {importResult}";
-                    }
+
+                   
+                    SaveUsers(users);
+                    ViewBag.JsonImported = true;
+                    ViewBag.JobInfo = $"Imported {users.Count} users successfully!";
                 }
             }
             catch (Exception ex)
             {
-                TempData["JsonImported"] = false;
+                ViewBag.JsonImported = false;
                 ViewBag.JobInfo = $"Error: {ex.Message}";
             }
             return View("Index");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> SearchUserByUsername(string username)
-        {
-            if (!IsJsonImported())
-            {
-                ViewBag.JobInfo = "You must import JSON from API first!";
-                return View("Index");
-            }
-            using (var client = new HttpClient())
-            {
-                var response = await client.GetAsync($"{localApiUrl}/search/{username}");
-                var json = await response.Content.ReadAsStringAsync();
-                ViewBag.SearchUserResult = PrettyPrintJson(json);
-            }
-            return View("Index");
-        }
+
+
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser(string jsonData)
+        public IActionResult CreateUser(TwitterUser user)
         {
-            if (!IsJsonImported())
-            {
-                ViewBag.JobInfo = "You must import JSON from API first!";
-                return View("Index");
-            }
-            using (var client = new HttpClient())
-            {
-                var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(localApiUrl, content);
-                var result = await response.Content.ReadAsStringAsync();
-                ViewBag.LocalApiResult = result;
-            }
-            return View("Index");
+            var users = LoadUsers();
+            int nextId = users.Any()
+                ? users.Select(u => int.TryParse(u.user_id, out var id) ? id : 0).Max() + 1
+                : 1;
+            user.user_id = nextId.ToString();
+
+            users.Add(user);
+            SaveUsers(users);
+            TempData["Message"] = $"User created successfully with ID {user.user_id}!";
+            return RedirectToAction("Index");
         }
 
+
         [HttpPost]
-        public async Task<IActionResult> UpdateUser(string id, string jsonData)
+        public IActionResult UpdateUser(string userId, TwitterUser updatedUser)
         {
-            if (!IsJsonImported())
+            var users = LoadUsers();
+            var user = users.FirstOrDefault(u => u.user_id == userId);
+            if (user == null)
             {
-                ViewBag.JobInfo = "You must import JSON from API first!";
-                return View("Index");
+                TempData["Message"] = "User not found!";
+                return RedirectToAction("Index");
             }
-            using (var client = new HttpClient())
-            {
-                var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-                var response = await client.PutAsync($"{localApiUrl}/{id}", content);
-                var result = await response.Content.ReadAsStringAsync();
-                ViewBag.LocalApiResult = result;
-            }
-            return View("Index");
+
+         
+            user.username = updatedUser.username;
+            user.name = updatedUser.name;
+            user.follower_count = updatedUser.follower_count;
+            user.following_count = updatedUser.following_count;
+            user.description = updatedUser.description;
+            user.location = updatedUser.location;
+            user.profile_pic_url = updatedUser.profile_pic_url;
+
+            SaveUsers(users);
+            TempData["Message"] = "User updated successfully!";
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteUser(string id)
+        public IActionResult DeleteUser(string userId)
         {
-            if (!IsJsonImported())
+            var users = LoadUsers();
+            var user = users.FirstOrDefault(u => u.user_id == userId);
+            if (user == null)
             {
-                ViewBag.JobInfo = "You must import JSON from API first!";
-                return View("Index");
+                TempData["Message"] = "User not found!";
+                return RedirectToAction("Index");
             }
-            using (var client = new HttpClient())
-            {
-                var response = await client.DeleteAsync($"{localApiUrl}/{id}");
-                var result = await response.Content.ReadAsStringAsync();
-                ViewBag.LocalApiResult = result;
-            }
-            return View("Index");
+            users.Remove(user);
+            SaveUsers(users);
+            TempData["Message"] = "User deleted successfully!";
+            return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> GetAllUsers()
+       
+        private List<TwitterUser> LoadUsers()
         {
-            if (!IsJsonImported())
+            if (!System.IO.File.Exists(dataPath))
             {
-                ViewBag.JobInfo = "You must import JSON from API first!";
-                return View("Index");
+                
+                Directory.CreateDirectory(Path.GetDirectoryName(dataPath)!);
+                System.IO.File.WriteAllText(dataPath, "[]");
+                return new List<TwitterUser>();
             }
-            using (var client = new HttpClient())
-            {
-                var response = await client.GetAsync(localApiUrl);
-                var json = await response.Content.ReadAsStringAsync();
-                ViewBag.LocalApiAll = PrettyPrintJson(json);
-            }
-            return View("Index");
-        }
 
-        private bool IsJsonImported()
-        {
-            return System.IO.File.Exists(dataPath) && new System.IO.FileInfo(dataPath).Length > 0;
-        }
-
-        private string PrettyPrintJson(string json)
-        {
+            var json = System.IO.File.ReadAllText(dataPath);
             try
             {
-                var parsed = JToken.Parse(json);
-                return parsed.ToString(Formatting.Indented);
+                return JsonConvert.DeserializeObject<List<TwitterUser>>(json) ?? new List<TwitterUser>();
             }
             catch
             {
-                return json;
+                
+                System.IO.File.WriteAllText(dataPath, "[]");
+                return new List<TwitterUser>();
             }
         }
 
-        // Parse users from Twitter API response (deeply nested structure)
-        private List<TwitterUser> ParseTwitterApiResponse(string json)
+
+        private void SaveUsers(List<TwitterUser> users)
         {
-            var apiUsers = new List<TwitterUser>();
-            try
-            {
-                var jObj = JObject.Parse(json);
-                // Try the "results" array (for some APIs)
-                var results = jObj["results"];
-                if (results != null)
-                {
-                    foreach (var item in results)
-                    {
-                        apiUsers.Add(new TwitterUser
-                        {
-                            user_id = item["user_id"]?.ToString(),
-                            username = item["username"]?.ToString(),
-                            name = item["name"]?.ToString(),
-                            follower_count = item["follower_count"]?.ToObject<int>() ?? 0,
-                            following_count = item["following_count"]?.ToObject<int>() ?? 0,
-                            description = item["description"]?.ToString(),
-                            location = item["location"]?.ToString(),
-                            profile_pic_url = item["profile_pic_url"]?.ToString()
-                        });
-                    }
-                }
-                else
-                {
-                    // Try the deeply nested structure (for other APIs)
-                    var entries = jObj["result"]?["timeline"]?["instructions"]?[0]?["entries"];
-                    if (entries != null)
-                    {
-                        foreach (var entry in entries)
-                        {
-                            var tweetResults = entry["content"]?["itemContent"]?["tweet_results"]?["result"];
-                            var tweet = tweetResults?["tweet"] ?? tweetResults;
-                            var userLegacy = tweet?["core"]?["user_results"]?["result"]?["legacy"];
-
-                            if (userLegacy != null)
-                            {
-                                apiUsers.Add(new TwitterUser
-                                {
-                                    user_id = userLegacy["id_str"]?.ToString(),
-                                    username = userLegacy["screen_name"]?.ToString(),
-                                    name = userLegacy["name"]?.ToString(),
-                                    follower_count = userLegacy["followers_count"]?.ToObject<int>() ?? 0,
-                                    following_count = userLegacy["friends_count"]?.ToObject<int>() ?? 0,
-                                    description = userLegacy["description"]?.ToString(),
-                                    location = userLegacy["location"]?.ToString(),
-                                    profile_pic_url = userLegacy["profile_image_url_https"]?.ToString()
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ViewBag.JobInfo += $" Error parsing API response: {ex.Message}";
-            }
-            return apiUsers;
+            Directory.CreateDirectory(Path.GetDirectoryName(dataPath)!);
+            System.IO.File.WriteAllText(dataPath, JsonConvert.SerializeObject(users, Formatting.Indented));
         }
+
 
         public IActionResult Index()
         {
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data", "twitterusers.json");
-            ViewBag.JsonImported = System.IO.File.Exists(path) && new System.IO.FileInfo(path).Length > 0;
+
+            ViewBag.Users = LoadUsers(); 
+            ViewBag.Imported = System.IO.File.Exists(dataPath) && new System.IO.FileInfo(dataPath).Length > 0;
             return View();
         }
+
     }
 }
+
+
