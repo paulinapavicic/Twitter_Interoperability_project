@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text;
@@ -7,6 +8,7 @@ using Twitter_Interoperability_project.Models;
 
 namespace Twitter_Interoperability_project.Controllers
 {
+    [Authorize]
     public class RestController : Controller
     {
 

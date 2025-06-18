@@ -8,6 +8,15 @@ using Twitter_Interoperability_project.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtSecretKey = builder.Configuration["Jwt:SecretKey"];
+var supabaseUrl = builder.Configuration["Supabase:Url"];
+var supabaseKey = builder.Configuration["Supabase:Key"];
+
+builder.Services.AddSingleton(provider =>
+{
+    var supabase = new Supabase.Client(supabaseUrl, supabaseKey);
+    supabase.InitializeAsync().Wait();
+    return supabase;
+});
 
 builder.Services.AddAuthentication(options =>
 {
@@ -19,7 +28,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.LoginPath = "/Account/Login";
     options.Cookie.SameSite = SameSiteMode.Lax;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Use "Always" in production
+    options.Cookie.SecurePolicy = CookieSecurePolicy.None; 
     options.Cookie.HttpOnly = true;
 })
 .AddJwtBearer(options =>
@@ -36,18 +45,18 @@ builder.Services.AddAuthentication(options =>
     {
         OnMessageReceived = context =>
         {
-            // Read token from cookie instead of header
+           
             context.Token = context.Request.Cookies["access_token"];
             return Task.CompletedTask;
         }
     };
 });
 
-// Add services to the container.
+builder.Services.AddAuthorization();
 builder.Services.AddControllersWithViews();
 
 
-//builder.Services.AddSoapCore();
+
 builder.Services.AddScoped<TwitterXmlService>();
 builder.Services.AddScoped<IJobPostingSoapService, JobPostingSoapService>();
 
@@ -56,7 +65,7 @@ builder.Configuration.AddJsonFile("appsettings.json");
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -69,8 +78,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
+app.UseAuthorization();
 
-// Add this after UseRouting, before MapControllerRoute and Run
 app.UseEndpoints(endpoints =>
 {
     endpoints.UseSoapEndpoint<IJobPostingSoapService>(

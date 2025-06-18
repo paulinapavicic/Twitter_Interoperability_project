@@ -2,22 +2,23 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Register";
 }
+
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
     <div class="card shadow-sm" style="width: 350px;">
-        <div class="card-body" >
-            <h3 class="card-title text-center mb-4">Login</h3>
-            <form asp-action="Login" method="post">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Register</h3>
+            <form asp-action="Register" method="post">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
                     <input type="text" name="username" class="form-control" id="username" required autocomplete="username" />
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" name="password" class="form-control" id="password" required autocomplete="current-password" />
+                    <input type="password" name="password" class="form-control" id="password" required autocomplete="new-password" />
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Login</button>
+                <button type="submit" class="btn btn-success w-100">Register</button>
             </form>
             @if (!ViewData.ModelState.IsValid)
             {
@@ -29,9 +30,12 @@
                 </div>
             }
             <div class="mt-3 text-center">
-                <span>Don't have an account?</span>
-                <a asp-action="Register">Register here.</a>
+                <span>Already have an account?</span>
+                <a asp-action="Login">Login here.</a>
             </div>
         </div>
     </div>
 </div>
+
+
+                

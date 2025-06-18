@@ -1,94 +1,124 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Crypto.Generators;
+using Supabase;
+using Supabase.Gotrue;
+using Supabase.Postgrest;
+using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
+using Twitter_Interoperability_project.Models;
+using static Supabase.Postgrest.Constants;
+using User = Twitter_Interoperability_project.Models.User;
 
 namespace Twitter_Interoperability_project.Controllers
 {
     [ApiController]
     [Route("api/auth")]
-    public class AuthController : Controller
+    public class AuthController : ControllerBase
     {
-        // In-memory for demo; use a database for production
-        private static Dictionary<string, string> refreshTokens = new Dictionary<string, string>();
+        private readonly string _secretKey;
+        private readonly Supabase.Client _supabase;
 
-        private readonly string secretKey;
-
-        public AuthController(IConfiguration configuration)
+        public AuthController(IConfiguration config, Supabase.Client supabase)
         {
-            secretKey = configuration["Jwt:SecretKey"];
+            _secretKey = config["Jwt:SecretKey"];
+            _supabase = supabase;
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model) // Make method async
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            // Demo: Accept any username/password
-            var claims = new[]
-            {
-        new Claim(ClaimTypes.Name, model.Username)
-    };
+            var userResult = await _supabase.From<User>()
+                .Filter("username", Supabase.Postgrest.Constants.Operator.Equals, model.Username)
+                .Get();
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var user = userResult.Models.FirstOrDefault();
+            if (user == null || !BCrypt.Net.BCrypt.Verify(model.Password, user.PasswordHash))
+                return Unauthorized();
 
-            var accessToken = new JwtSecurityToken(
-                expires: DateTime.UtcNow.AddMinutes(5),
-                claims: claims,
-                signingCredentials: creds);
-
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(accessToken);
-
+            // Issue JWT and refresh token
+            var accessToken = GenerateJwtToken(user.Username);
             var refreshToken = Guid.NewGuid().ToString();
-            refreshTokens[refreshToken] = model.Username;
 
-            
-            return Ok(new
+            await _supabase.From<RefreshToken>().Insert(new RefreshToken
             {
-                access_token = tokenString,
-                refresh_token = refreshToken
+                UserId = user.Id,
+                AccessToken = accessToken,
+                refreshToken = refreshToken,
+                ExpiresAt = DateTime.UtcNow.AddDays(7)
             });
+
+            return Ok(new { access_token = accessToken, refresh_token = refreshToken });
         }
 
         [HttpPost("refresh")]
-        public IActionResult Refresh([FromBody] RefreshRequest request)
+        public async Task<IActionResult> Refresh([FromBody] RefreshRequest request)
         {
-            if (!refreshTokens.ContainsKey(request.RefreshToken))
+            var tokenResult = await _supabase.From<RefreshToken>()
+                .Filter("refresh_token", Operator.Equals, request.RefreshToken)
+                .Get();
+
+            var token = tokenResult.Models.FirstOrDefault();
+            if (token == null || token.ExpiresAt < DateTime.UtcNow)
                 return Unauthorized();
 
-            var username = refreshTokens[request.RefreshToken];
-            var claims = new[]
-            {
-            new Claim(ClaimTypes.Name, username)
-        };
+            // Get user and issue new tokens
+            var userResult = await _supabase.From<User>()
+                .Filter("id", Supabase.Postgrest.Constants.Operator.Equals, token.UserId)
+                .Get();
+            var user = userResult.Models.FirstOrDefault();
+            if (user == null)
+                return Unauthorized();
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+            var newAccessToken = GenerateJwtToken(user.Username);
+            var newRefreshToken = Guid.NewGuid().ToString();
+
+            // Update refresh token
+            
+            token.ExpiresAt = DateTime.UtcNow.AddDays(7);
+            await token.Update<RefreshToken>();
+
+            return Ok(new { access_token = newAccessToken, refresh_token = newRefreshToken });
+        }
+
+        private string GenerateJwtToken(string username)
+        {
+            var claims = new[] { new Claim(ClaimTypes.Name, username) };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var accessToken = new JwtSecurityToken(
-                expires: DateTime.UtcNow.AddMinutes(5),
+            var token = new JwtSecurityToken(
+                expires: DateTime.UtcNow.AddMinutes(15),
                 claims: claims,
                 signingCredentials: creds);
 
-            // Optionally: generate a new refresh token here
-
-            return Ok(new
-            {
-                access_token = new JwtSecurityTokenHandler().WriteToken(accessToken)
-            });
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+
+    }
+    public class LoginModel
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+    public class RefreshRequest
+    {
+        public string RefreshToken { get; set; }
     }
 }
 
 
-public class LoginModel
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
-}
-public class RefreshRequest
-{
-    public string RefreshToken { get; set; }
-}
+
+
+
+ 
+
+
+
