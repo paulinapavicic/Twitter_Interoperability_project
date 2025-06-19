@@ -7,10 +7,10 @@ namespace Twitter_Interoperability_project.Controllers
     [Route("api/jobpostings")]
     public class JobPostingsApiController : Controller
     {
-        // In-memory storage for demo purposes
+        
         private static List<JobPosting> JobPostings = new List<JobPosting>();
 
-        // GET: api/jobpostings
+        
         [HttpGet]
         public ActionResult<IEnumerable<JobPosting>> GetAll()
         {
@@ -18,7 +18,7 @@ namespace Twitter_Interoperability_project.Controllers
         }
 
 
-        // GET: api/jobpostings/{id}
+       
         [HttpGet("{id}")]
         public ActionResult<JobPosting> Get(string id)
         {
@@ -27,7 +27,7 @@ namespace Twitter_Interoperability_project.Controllers
             return Ok(job);
         }
 
-        // POST: api/jobpostings
+       
         [HttpPost]
         public ActionResult<JobPosting> Create([FromBody] JobPosting job)
         {
@@ -42,7 +42,7 @@ namespace Twitter_Interoperability_project.Controllers
             return CreatedAtAction(nameof(Get), new { id = job.Id }, job);
         }
 
-        // PUT: api/jobpostings/{id}
+        
         [HttpPut("{id}")]
         public IActionResult Update(string id, [FromBody] JobPosting updated)
         {
@@ -64,7 +64,7 @@ namespace Twitter_Interoperability_project.Controllers
             return NoContent();
         }
 
-        // DELETE: api/jobpostings/{id}
+        
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {

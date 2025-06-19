@@ -44,7 +44,7 @@ namespace Twitter_Interoperability_project.Controllers
                 model.RngData = SampleRng();
                 model.Result = null;
             }
-            else // Validate and save to MinIO if valid
+            else 
             {
                 var errors = _validator.ValidateXmlWithRngString(model.XmlData, model.RngData);
 
@@ -52,7 +52,7 @@ namespace Twitter_Interoperability_project.Controllers
                 {
                     try
                     {
-                        // Save to MinIO
+                        
                         var bucketName = "interoperability";
                         var objectName = $"jobpostings-rng/{Guid.NewGuid()}.xml";
                         var xmlBytes = Encoding.UTF8.GetBytes(model.XmlData);
@@ -67,7 +67,7 @@ namespace Twitter_Interoperability_project.Controllers
                                 .WithObjectSize(stream.Length)
                                 .WithContentType("application/xml"));
 
-                        // Deserialize and store locally
+                        
                         var serializer = new XmlSerializer(typeof(JobPosting));
                         using (var reader = new StringReader(model.XmlData))
                         {

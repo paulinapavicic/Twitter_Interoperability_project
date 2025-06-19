@@ -42,7 +42,7 @@ namespace Twitter_Interoperability_project.Controllers
             if (user == null || !BCrypt.Net.BCrypt.Verify(model.Password, user.PasswordHash))
                 return Unauthorized();
 
-            // Issue JWT and refresh token
+            
             var accessToken = GenerateJwtToken(user.Username);
             var refreshToken = Guid.NewGuid().ToString();
 
@@ -68,7 +68,7 @@ namespace Twitter_Interoperability_project.Controllers
             if (token == null || token.ExpiresAt < DateTime.UtcNow)
                 return Unauthorized();
 
-            // Get user and issue new tokens
+            
             var userResult = await _supabase.From<User>()
                 .Filter("id", Supabase.Postgrest.Constants.Operator.Equals, token.UserId)
                 .Get();
@@ -79,7 +79,7 @@ namespace Twitter_Interoperability_project.Controllers
             var newAccessToken = GenerateJwtToken(user.Username);
             var newRefreshToken = Guid.NewGuid().ToString();
 
-            // Update refresh token
+            
             
             token.ExpiresAt = DateTime.UtcNow.AddDays(7);
             await token.Update<RefreshToken>();

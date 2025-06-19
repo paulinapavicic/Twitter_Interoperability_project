@@ -43,7 +43,7 @@ namespace Twitter_Interoperability_project.Controllers
                 model.XsdData = SampleXsd();
                 model.Result = null;
             }
-            else // Validate and save to MinIO if valid
+            else 
             {
                 var errors = _validator.ValidateXmlWithXsdString(model.XmlData, model.XsdData);
 
@@ -51,7 +51,7 @@ namespace Twitter_Interoperability_project.Controllers
                 {
                     try
                     {
-                        // Save validated XML to MinIO
+                       
                         var bucketName = "interoperability";
                         var objectName = $"jobpostings/{Guid.NewGuid()}.xml";
                         var xmlBytes = Encoding.UTF8.GetBytes(model.XmlData);
@@ -66,7 +66,7 @@ namespace Twitter_Interoperability_project.Controllers
                                 .WithObjectSize(stream.Length)
                                 .WithContentType("application/xml"));
 
-                        // Deserialize and store locally
+                       
                         var serializer = new XmlSerializer(typeof(JobPosting));
                         using (var reader = new StringReader(model.XmlData))
                         {

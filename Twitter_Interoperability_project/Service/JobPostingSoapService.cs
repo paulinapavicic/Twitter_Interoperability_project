@@ -24,7 +24,7 @@ namespace Twitter_Interoperability_project.Service
                     )
                 );
 
-            // Optionally: Log matches for debugging
+            
             File.WriteAllText("App_Data/soap_matched_debug.xml", new XElement("Debug", matches).ToString());
 
             return new XElement("SearchResults", matches).ToString();

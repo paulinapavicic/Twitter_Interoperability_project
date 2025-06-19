@@ -15,13 +15,13 @@ namespace Twitter_Interoperability_project.Controllers
         [HttpPost]
         public IActionResult ValidateXml()
         {
-            // 1. Paths
+            
             string sourcePath = Path.Combine(_hostEnvironment.ContentRootPath, "App_Data", "jobpostings.xml");
             string javaValidatorDir = @"C:\Users\pauli\OneDrive\Radna površina\Desktop\Algebra\3 godina\6.semestar\Interoperability\Jaxb\build\classes";
             string destinationPath = Path.Combine(javaValidatorDir, "jobpostings.xml");
             string xsdPath = Path.Combine(javaValidatorDir, "jobpostings.xsd");
 
-            // 2. Copy XML and XSD to Java classpath dir (overwrite if exists)
+        
             if (!System.IO.File.Exists(sourcePath))
             {
                 ViewBag.JaxbValidationResult = "Error: jobpostings.xml not found in App_Data folder.";
@@ -29,10 +29,8 @@ namespace Twitter_Interoperability_project.Controllers
             }
             System.IO.File.Copy(sourcePath, destinationPath, true);
 
-            // (Optional) Copy XSD as well if needed
-            // System.IO.File.Copy(..., xsdPath, true);
-
-            // 3. Prepare and run the Java validator process
+          
+         
             string javaExe = "java";
             string args = $"-cp . jaxb.Jaxb jobpostings.xsd jobpostings.xml";
 
