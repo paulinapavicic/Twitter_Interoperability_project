@@ -1,6 +1,7 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@model Twitter_Interoperability_project.Models.RngValidationViewModel
 @{
     ViewData["Title"] = "RNG Validator";
 }
@@ -64,11 +65,11 @@
         </div>
     }
 
-    @if (ViewBag.JobPostings != null && ((List<Twitter_Interoperability_project.Models.JobPosting>)ViewBag.JobPostings).Any())
+    @if (Model.JobPostings != null && Model.JobPostings.Any())
     {
         <h3>Saved Job Postings:</h3>
         <ul>
-            @foreach (var job in (List<Twitter_Interoperability_project.Models.JobPosting>)ViewBag.JobPostings)
+            @foreach (var job in Model.JobPostings)
             {
                 <li>
                     <b>@job.Title</b> (@job.Id) - @job.CompanyName<br />
@@ -78,4 +79,3 @@
         </ul>
     }
 </div>
-

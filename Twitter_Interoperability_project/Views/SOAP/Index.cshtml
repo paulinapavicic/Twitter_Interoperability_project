@@ -10,8 +10,8 @@
         <h3>Generate Twitter Data XML</h3>
         <form asp-action="GenerateXml" method="post">
             <div class="form-group">
-                <label>Search Query:</label>
-                <input type="text" name="query" class="form-control" required />
+                <label for="query">Search Query:</label>
+                <input type="text" name="query" id="query" class="form-control" required />
             </div>
             <button type="submit" class="btn btn-primary mt-3">Generate XML</button>
         </form>
@@ -21,37 +21,37 @@
         <h3>Search Job Postings via SOAP</h3>
         <form method="post" asp-action="SearchSoap">
             <div class="form-group">
-                <label>Search term:</label>
-                <input type="text" name="term" class="form-control" required />
+                <label for="term">Search term:</label>
+                <input type="text" name="term" id="term" class="form-control" required />
             </div>
             <button type="submit" class="btn btn-success mt-3">Search via SOAP</button>
         </form>
 
-   
-
-        @if (ViewBag.SoapResultsXml != null)
-        {
-            <label>Raw SOAP Search Results (XML):</label>
-            <textarea class="form-control" rows="10" readonly>@ViewBag.SoapResultsXml</textarea>
-        }
-
+        <!-- Success and Error Feedback -->
         @if (ViewBag.SoapMessage != null)
         {
-            <div class="alert alert-success">@ViewBag.SoapMessage</div>
+            <div class="alert alert-success mt-3">@ViewBag.SoapMessage</div>
         }
         @if (ViewBag.SoapError != null)
         {
-            <div class="alert alert-danger">@ViewBag.SoapError</div>
+            <div class="alert alert-danger mt-3">@ViewBag.SoapError</div>
         }
         @if (TempData["XmlMessage"] != null)
         {
-            <div class="alert alert-success">@TempData["XmlMessage"]</div>
+            <div class="alert alert-success mt-3">@TempData["XmlMessage"]</div>
         }
         @if (TempData["XmlError"] != null)
         {
-            <div class="alert alert-danger">@TempData["XmlError"]</div>
+            <div class="alert alert-danger mt-3">@TempData["XmlError"]</div>
         }
 
+        <!-- Raw SOAP Result XML -->
+        @if (ViewBag.SoapResultsXml != null)
+        {
+            <label class="mt-3">Raw SOAP Search Results (XML):</label>
+            <textarea class="form-control" rows="10" readonly>@ViewBag.SoapResultsXml</textarea>
+        }
 
+     
     </div>
 </div>

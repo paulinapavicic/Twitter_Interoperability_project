@@ -23,7 +23,7 @@ namespace Twitter_Interoperability_project.Service
                 $"https://twitter241.p.rapidapi.com/search?query={Uri.EscapeDataString(query)}&type=Latest&count=20");
 
             var json = await response.Content.ReadAsStringAsync();
-            System.IO.File.WriteAllText("App_Data/last_api_response.json", json); // For debugging
+            System.IO.File.WriteAllText("App_Data/last_api_response.json", json); 
 
             var jObj = JObject.Parse(json);
 

@@ -1,6 +1,8 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@using System.Linq
+@model Twitter_Interoperability_project.Models.XsdValidationViewModel
 @{
     ViewData["Title"] = "XSD Validator";
 }
@@ -48,14 +50,15 @@
             <label class="validator-label" for="xmlData">XML data to validate</label>
             <textarea id="xmlData" name="XmlData" class="validator-textarea">@Model.XmlData</textarea>
         </div>
-        <div class="validator-section">
-            <label class="validator-label" for="xsdData">XML schema (XSD) data</label>
-            <textarea id="xsdData" name="XsdData" class="validator-textarea">@Model.XsdData</textarea>
-        </div>
         <button type="submit" class="btn btn-primary" style="float:right;">Validate</button>
-        <button type="submit" name="submit" value="Sample" class="btn btn-secondary">Sample Data</button>
+        <button type="submit" name="submit" value="Sample" class="btn btn-secondary">Load Sample XML</button>
         <div style="clear:both;"></div>
     </form>
+
+    <div class="validator-section">
+        <label class="validator-label" for="xsdData">Current XML Schema (XSD)</label>
+        <textarea id="xsdData" class="validator-textarea" readonly>@Model.XsdData</textarea>
+    </div>
 
     @if (!string.IsNullOrEmpty(Model.Result))
     {
@@ -63,11 +66,17 @@
             @Html.Raw(Model.Result)
         </div>
     }
-    @if (ViewBag.JobPostings != null && ((List<Twitter_Interoperability_project.Models.JobPosting>)ViewBag.JobPostings).Any())
+
+   
+    @if (Model.JobPostings == null || !Model.JobPostings.Any())
+    {
+        <p>No job postings found.</p>
+    }
+    else
     {
         <h3>Saved Job Postings:</h3>
         <ul>
-            @foreach (var job in (List<Twitter_Interoperability_project.Models.JobPosting>)ViewBag.JobPostings)
+            @foreach (var job in Model.JobPostings)
             {
                 <li>
                     <b>@job.Title</b> (@job.Id) - @job.CompanyName<br />
@@ -76,6 +85,5 @@
             }
         </ul>
     }
-
 
 </div>

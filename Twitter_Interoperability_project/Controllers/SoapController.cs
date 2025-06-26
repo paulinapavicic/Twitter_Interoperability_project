@@ -30,50 +30,103 @@ namespace Twitter_Interoperability_project.Controllers
   </soap:Body>
 </soap:Envelope>";
 
-            using var client = new HttpClient();
-            var content = new StringContent(soapEnvelope, Encoding.UTF8, "text/xml");
-            content.Headers.Add("SOAPAction", "\"http://tempuri.org/IJobPostingSoapService/SearchJobPostings\"");
+                using var client = new HttpClient();
+                var content = new StringContent(soapEnvelope, Encoding.UTF8, "text/xml");
+                content.Headers.Add("SOAPAction", "\"http://tempuri.org/IJobPostingSoapService/SearchJobPostings\"");
 
-            var baseUrl = $"{Request.Scheme}://{Request.Host}";
-            var response = await client.PostAsync($"{baseUrl}/JobPostingSoap.svc", content);
-            var soapResponse = await response.Content.ReadAsStringAsync();
+                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var response = await client.PostAsync($"{baseUrl}/JobPostingSoap.svc", content);
 
-       
-            System.IO.File.WriteAllText("App_Data/last_soap_response.xml", soapResponse);
-
-           
-            var xdoc = XDocument.Parse(soapResponse);
-            var searchResultsNode = xdoc.Descendants().FirstOrDefault(e => e.Name.LocalName == "SearchJobPostingsResult");
-
-            var jobPostings = searchResultsNode?
-                .Elements()
-                .Where(e => e.Name.LocalName == "JobPosting")
-                .Select(e => new
+                if (!response.IsSuccessStatusCode)
                 {
-                    Title = e.Element("Title")?.Value,
-                    CompanyName = e.Element("CompanyName")?.Value,
-                    Location = e.Element("Location")?.Value,
-                    JobDescription = e.Element("JobDescription")?.Value
-                })
-                .ToList();
+                    ViewBag.SoapError = $"SOAP service returned status code: {response.StatusCode}";
+                    return View("Index");
+                }
 
-            ViewBag.JobPostings = jobPostings;
-            ViewBag.SearchTerm = term;
-                ViewBag.SoapResultsXml = searchResultsNode != null ? searchResultsNode.ToString() : "No results found or error in SOAP response.";
+                var soapResponse = await response.Content.ReadAsStringAsync();
 
-                if (jobPostings != null && jobPostings.Any())
-                    ViewBag.SoapMessage = "Search completed successfully!";
+                // Save last SOAP response for debugging
+                try
+                {
+                    Directory.CreateDirectory("App_Data");
+                    System.IO.File.WriteAllText("App_Data/last_soap_response.xml", soapResponse);
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.SoapError = "Could not save SOAP response for debugging: " + ex.Message;
+                }
+
+                // Parse SOAP XML
+                XDocument xdoc;
+                try
+                {
+                    xdoc = XDocument.Parse(soapResponse);
+                }
+                catch (System.Xml.XmlException ex)
+                {
+                    ViewBag.SoapError = "Malformed SOAP response: " + ex.Message;
+                    return View("Index");
+                }
+
+                var searchResultsNode = xdoc.Descendants().FirstOrDefault(e => e.Name.LocalName == "SearchJobPostingsResult");
+
+                if (searchResultsNode == null)
+                {
+                    ViewBag.SoapError = "No search results found in SOAP response.";
+                    return View("Index");
+                }
+
+                // --- FIX: Unescape and parse the inner XML ---
+                var innerXml = searchResultsNode.Value ?? searchResultsNode.FirstNode?.ToString();
+                var unescapedXml = System.Net.WebUtility.HtmlDecode(innerXml);
+                var innerDoc = XDocument.Parse(unescapedXml);
+
+                var jobPostings = innerDoc
+                    .Descendants()
+                    .Where(e => e.Name.LocalName == "JobPosting")
+                    .Select(e => new
+                    {
+                        Title = e.Elements().FirstOrDefault(el => el.Name.LocalName == "Title")?.Value,
+                        CompanyName = e.Elements().FirstOrDefault(el => el.Name.LocalName == "CompanyName")?.Value,
+                        Location = e.Elements().FirstOrDefault(el => el.Name.LocalName == "Location")?.Value,
+                        JobDescription = e.Elements().FirstOrDefault(el => el.Name.LocalName == "JobDescription")?.Value
+                    })
+                    .ToList();
+
+                ViewBag.JobPostings = jobPostings;
+                ViewBag.SearchTerm = term;
+                ViewBag.SoapResultsXml = unescapedXml;
+
+                if (jobPostings.Any())
+                    ViewBag.SoapMessage = $"Search completed successfully! {jobPostings.Count} result(s) found.";
                 else
-                    ViewBag.SoapError = "No job postings found for the given term.";
+                    ViewBag.SoapError = "No job postings matched the given term.";
 
+                return View("Index");
+            }
+            catch (HttpRequestException ex)
+            {
+                ViewBag.SoapError = "Could not reach the SOAP service. Details: " + ex.Message;
+                return View("Index");
+            }
+            catch (FileNotFoundException ex)
+            {
+                ViewBag.SoapError = "Data file not found. Please generate the XML file first.";
+                return View("Index");
+            }
+            catch (System.Xml.XmlException ex)
+            {
+                ViewBag.SoapError = "Malformed XML: " + ex.Message;
                 return View("Index");
             }
             catch (Exception ex)
             {
-                ViewBag.SoapError = "An error occurred during SOAP search: " + ex.Message;
+                ViewBag.SoapError = "An unexpected error occurred: " + ex.Message;
                 return View("Index");
             }
         }
+
+      
 
 
 
@@ -84,6 +137,10 @@ namespace Twitter_Interoperability_project.Controllers
             {
                 await _twitterXmlService.GenerateJobPostingsXml(query);
                 TempData["XmlMessage"] = "XML generated successfully!";
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["XmlError"] = "Invalid query: " + ex.Message;
             }
             catch (Exception ex)
             {

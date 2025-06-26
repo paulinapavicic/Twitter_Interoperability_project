@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Minio.DataModel.Args;
 using Minio;
+using Minio.ApiEndpoints;
+using Minio.DataModel.Args;
 using System.Text;
 using System.Xml.Serialization;
 using Twitter_Interoperability_project.Models;
@@ -10,91 +11,161 @@ namespace Twitter_Interoperability_project.Controllers
 {
     public class XsdController : Controller
     {
-        private static List<JobPosting> _jobPostings = new List<JobPosting>();
         private readonly XmlValidationService _validator;
         private readonly IMinioClient _minio;
+        private readonly string _bucketName = "interoperability";
+        private readonly string _xsdPath = "wwwroot/schema/jobposting.xsd"; 
 
         public XsdController(IConfiguration configuration)
         {
             _validator = new XmlValidationService();
 
-            // Initialize MinIO client using configuration
+            
             _minio = new MinioClient()
-       .WithEndpoint(configuration["MinIO:Endpoint"])
-       .WithCredentials(configuration["MinIO:AccessKey"], configuration["MinIO:SecretKey"])
-       .Build();
-
+                .WithEndpoint(configuration["MinIO:Endpoint"])
+                .WithCredentials(configuration["MinIO:AccessKey"], configuration["MinIO:SecretKey"])
+                .Build();
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var model = new XsdValidationViewModel();
-            ViewBag.JobPostings = _jobPostings;
+            model.JobPostings = await ListJobPostingsAsync();
+            model.XsdData = System.IO.File.ReadAllText(_xsdPath);
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Index(XsdValidationViewModel model, string submit)
         {
+            model.XsdData = System.IO.File.ReadAllText(_xsdPath);
+
             if (submit == "Sample")
             {
+                
                 model.XmlData = SampleXml();
-                model.XsdData = SampleXsd();
                 model.Result = null;
+                model.JobPostings = await ListJobPostingsAsync();
+                return View(model);
             }
-            else 
+
+            
+            string xsdContent = System.IO.File.ReadAllText(_xsdPath);
+
+            
+            var errors = _validator.ValidateXmlWithXsdString(model.XmlData, xsdContent);
+
+            if (errors.Count == 0)
             {
-                var errors = _validator.ValidateXmlWithXsdString(model.XmlData, model.XsdData);
-
-                if (errors.Count == 0)
+                try
                 {
-                    try
-                    {
-                       
-                        var bucketName = "interoperability";
-                        var objectName = $"jobpostings/{Guid.NewGuid()}.xml";
-                        var xmlBytes = Encoding.UTF8.GetBytes(model.XmlData);
+                    
+                    var objectName = $"jobpostings/{Guid.NewGuid()}.xml";
+                    await SaveToMinio(model.XmlData, objectName);
 
-                        using var stream = new MemoryStream(xmlBytes);
+                    var job = DeserializeJobPosting(model.XmlData);
+                    model.JobPostings = await ListJobPostingsAsync();
 
-                        await _minio.PutObjectAsync(
-                            new PutObjectArgs()
-                                .WithBucket(bucketName)
-                                .WithObject(objectName)
-                                .WithStreamData(stream)
-                                .WithObjectSize(stream.Length)
-                                .WithContentType("application/xml"));
 
-                       
-                        var serializer = new XmlSerializer(typeof(JobPosting));
-                        using (var reader = new StringReader(model.XmlData))
-                        {
-                            var job = (JobPosting)serializer.Deserialize(reader);
-                            _jobPostings.Add(job);
-                        }
-
-                        model.Result = "<span style='color:green;'>XML is valid and saved to MinIO!</span>";
-                    }
-                    catch (Exception ex)
-                    {
-                        model.Result = $"<span style='color:red;'>Error saving to MinIO: {ex.Message}</span>";
-                    }
+                    model.Result = "<span style='color:green;'>XML is valid and saved to MinIO!</span>";
                 }
-                else
+                catch (Exception ex)
                 {
-                    model.Result = "<span style='color:red;'>Validation errors:<br/>" +
-                                  string.Join("<br/>", errors) + "</span>";
+                    model.Result = $"<span style='color:red;'>Error: {ex.Message}</span>";
+                    model.JobPostings = await ListJobPostingsAsync();
                 }
             }
+            else
+            {
+                model.Result = "<span style='color:red;'>Validation errors:<br/>" +
+                              string.Join("<br/>", errors) + "</span>";
+                model.JobPostings = await ListJobPostingsAsync();
+            }
 
-            ViewBag.JobPostings = _jobPostings;
             return View(model);
         }
 
+        private async Task SaveToMinio(string xmlData, string objectName)
+        {
+            var xmlBytes = Encoding.UTF8.GetBytes(xmlData);
+            using var stream = new MemoryStream(xmlBytes);
 
-        private string SampleXml() => @"<JobPosting>
-  <Id>QXBpSm9iUmVzdWx0czoxNzY2ODE5MDA4MDI2OTMxMjAw</Id>
+           
+            bool bucketExists = await _minio.BucketExistsAsync(
+                new BucketExistsArgs().WithBucket(_bucketName));
+
+            if (!bucketExists)
+            {
+                await _minio.MakeBucketAsync(
+                    new MakeBucketArgs().WithBucket(_bucketName));
+            }
+
+            
+            await _minio.PutObjectAsync(
+                new PutObjectArgs()
+                    .WithBucket(_bucketName)
+                    .WithObject(objectName)
+                    .WithStreamData(stream)
+                    .WithObjectSize(stream.Length)
+                    .WithContentType("application/xml"));
+        }
+
+        private JobPosting DeserializeJobPosting(string xmlData)
+        {
+            var serializer = new XmlSerializer(typeof(JobPosting));
+            using var reader = new StringReader(xmlData);
+            return (JobPosting)serializer.Deserialize(reader);
+        }
+
+        private async Task<List<JobPosting>> ListJobPostingsAsync()
+        {
+            var postings = new List<JobPosting>();
+
+            try
+            {
+                bool bucketExists = await _minio.BucketExistsAsync(
+                    new BucketExistsArgs().WithBucket(_bucketName));
+
+                if (!bucketExists) return postings;
+
+                var listArgs = new ListObjectsArgs()
+                    .WithBucket(_bucketName)
+                    .WithPrefix("jobpostings/")
+                    .WithRecursive(true);
+
+                await foreach (var item in _minio.ListObjectsEnumAsync(listArgs))
+                {
+                    if (!item.Key.EndsWith(".xml")) continue;
+
+                    using var ms = new MemoryStream();
+                    await _minio.GetObjectAsync(
+                        new GetObjectArgs()
+                            .WithBucket(_bucketName)
+                            .WithObject(item.Key)
+                            .WithCallbackStream(async stream =>
+                            {
+                                await stream.CopyToAsync(ms); 
+                            }));
+
+                    ms.Seek(0, SeekOrigin.Begin);
+                    var xmlContent = Encoding.UTF8.GetString(ms.ToArray());
+                    postings.Add(DeserializeJobPosting(xmlContent));
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                Console.WriteLine($"Error listing jobs: {ex.Message}");
+            }
+
+            return postings;
+        }
+        private string SampleXml()
+        {
+            var newId = Guid.NewGuid().ToString();
+            return $@"<JobPosting>
+  <Id>{newId}</Id>
   <RestId>1766819008026931200</RestId>
   <Title>Senior Python Developer</Title>
   <ExternalUrl>https://jobs.smartrecruiters.com/Devoteam/743999972803753-senior-python-developer</ExternalUrl>
@@ -107,29 +178,9 @@ namespace Twitter_Interoperability_project.Controllers
   <CompanyName>Devoteam</CompanyName>
   <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1082991650794889217/h4Bo8Z5E_normal.jpg</CompanyLogoUrl>
 </JobPosting>";
-
-
-        private string SampleXsd() => @"<xs:schema xmlns:xs='http://www.w3.org/2001/XMLSchema'>
-  <xs:element name='JobPosting'>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name='Id' type='xs:string'/>
-        <xs:element name='RestId' type='xs:string'/>
-        <xs:element name='Title' type='xs:string'/>
-        <xs:element name='ExternalUrl' type='xs:string'/>
-        <xs:element name='JobDescription' type='xs:string'/>
-        <xs:element name='JobPageUrl' type='xs:string'/>
-        <xs:element name='Location' type='xs:string'/>
-        <xs:element name='LocationType' type='xs:string'/>
-        <xs:element name='SeniorityLevel' type='xs:string'/>
-        <xs:element name='Team' type='xs:string'/>
-        <xs:element name='CompanyName' type='xs:string'/>
-        <xs:element name='CompanyLogoUrl' type='xs:string'/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
-</xs:schema>";
+        }
 
     }
 }
+
 
