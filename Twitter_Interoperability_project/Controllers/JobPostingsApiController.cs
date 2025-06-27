@@ -58,7 +58,7 @@ namespace Twitter_Interoperability_project.Controllers
 
             job.Id = job.Id ?? Guid.NewGuid().ToString();
 
-            // Serialize and save to MinIO
+            
             var serializer = new XmlSerializer(typeof(JobPosting));
             string xmlContent;
             using (var sw = new StringWriter())
@@ -92,7 +92,7 @@ namespace Twitter_Interoperability_project.Controllers
             if (errors.Count > 0)
                 return BadRequest(new { Errors = errors });
 
-            // Deserialize to get the Id
+            
             var serializer = new XmlSerializer(typeof(JobPosting));
             JobPosting job;
             using (var sr = new StringReader(xmlContent))
@@ -114,7 +114,7 @@ namespace Twitter_Interoperability_project.Controllers
             var job = jobs.FirstOrDefault(j => j.Id == id);
             if (job == null) return NotFound();
 
-            // Update fields
+           
             updated.Id = id;
             var serializer = new XmlSerializer(typeof(JobPosting));
             string xmlContent;
@@ -149,7 +149,7 @@ namespace Twitter_Interoperability_project.Controllers
             return NoContent();
         }
 
-        // Helper: Save XML to MinIO
+       
         private async Task SaveToMinio(string xmlData, string objectName)
         {
             var xmlBytes = Encoding.UTF8.GetBytes(xmlData);
@@ -172,7 +172,7 @@ namespace Twitter_Interoperability_project.Controllers
                     .WithContentType("application/xml"));
         }
 
-        // Helper: List all JobPostings from MinIO
+        
         private async Task<List<JobPosting>> ListJobPostingsAsync()
         {
             var postings = new List<JobPosting>();
@@ -208,7 +208,7 @@ namespace Twitter_Interoperability_project.Controllers
             }
             catch
             {
-                // Ignore errors for listing
+                
             }
             return postings;
         }

@@ -50,7 +50,7 @@ namespace Twitter_Interoperability_project.Service
             }
             catch
             {
-                // Ignore debug file errors
+                
             }
 
            

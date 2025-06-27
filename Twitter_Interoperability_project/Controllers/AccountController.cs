@@ -50,7 +50,7 @@ namespace Twitter_Interoperability_project.Controllers
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
-                new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddSeconds(15) }
+                new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddMinutes(15) }
             );
 
            
@@ -71,7 +71,7 @@ namespace Twitter_Interoperability_project.Controllers
                 HttpOnly = true,
                 Secure = true, 
                 SameSite = SameSiteMode.Lax,
-                Expires = DateTime.UtcNow.AddSeconds(15)
+                Expires = DateTime.UtcNow.AddMinutes(15)
             });
             Response.Cookies.Append("refresh_token", refreshToken, new CookieOptions
             {
@@ -127,7 +127,7 @@ namespace Twitter_Interoperability_project.Controllers
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                expires: DateTime.UtcNow.AddSeconds(15),
+                expires: DateTime.UtcNow.AddMinutes(15),
                 claims: claims,
                 signingCredentials: creds
             );

@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml.Serialization;
 using Twitter_Interoperability_project.Models;
 using Twitter_Interoperability_project.Service;
+using static Twitter_Interoperability_project.Controllers.XsdController;
 
 namespace Twitter_Interoperability_project.Controllers
 {
@@ -129,12 +130,16 @@ namespace Twitter_Interoperability_project.Controllers
                             .WithCallbackStream(async stream => await stream.CopyToAsync(ms)));
 
                     ms.Seek(0, SeekOrigin.Begin);
-                    var serializer = new XmlSerializer(typeof(JobPosting));
-                    using var reader = new StreamReader(ms);
+                    var xmlContent = Encoding.UTF8.GetString(ms.ToArray());
+
+                    
                     try
                     {
-                        var job = (JobPosting)serializer.Deserialize(reader);
-                        postings.Add(job);
+                        var serializer = new XmlSerializer(typeof(JobPostingsWrapper));
+                        using var reader = new StringReader(xmlContent);
+                        var wrapper = (JobPostingsWrapper)serializer.Deserialize(reader);
+                        if (wrapper?.Items != null)
+                            postings.AddRange(wrapper.Items);
                     }
                     catch
                     {
@@ -152,36 +157,47 @@ namespace Twitter_Interoperability_project.Controllers
         private string SampleXml()
         {
             var newId = Guid.NewGuid().ToString();
-            return $@"<JobPosting>
-  <Id>{newId}</Id>
-  <RestId>1766819008026931200</RestId>
-  <Title>Senior Python Developer</Title>
-  <ExternalUrl>https://jobs.smartrecruiters.com/Devoteam/743999972803753-senior-python-developer</ExternalUrl>
-  <JobDescription>Devoteam is a leading consulting firm focused on digital strategy...</JobDescription>
-  <JobPageUrl>https://x.com/i/jobs/1766819008026931200</JobPageUrl>
-  <Location>Machelen, Vlaams Gewest, be</Location>
-  <LocationType>onsite</LocationType>
-  <SeniorityLevel>senior</SeniorityLevel>
-  <Team>Development</Team>
-  <CompanyName>Devoteam</CompanyName>
-  <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1082991650794889217/h4Bo8Z5E_normal.jpg</CompanyLogoUrl>
-</JobPosting>";
+            return $@"<JobPostings>
+  <JobPosting>
+    <Id>{newId}</Id>
+    <RestId>1766819008026931200</RestId>
+    <Title>Senior Python Developer</Title>
+    <ExternalUrl>https://jobs.smartrecruiters.com/Devoteam/743999972803753-senior-python-developer</ExternalUrl>
+    <JobPageUrl>https://x.com/i/jobs/1766819008026931200</JobPageUrl>
+    <Location>Machelen, Vlaams Gewest, be</Location>
+    <CompanyName>Devoteam</CompanyName>
+    <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1082991650794889217/h4Bo8Z5E_normal.jpg</CompanyLogoUrl>
+  </JobPosting>
+</JobPostings>";
         }
 
-        private string SampleRng() => @"<element name='JobPosting' xmlns='http://relaxng.org/ns/structure/1.0'>
-  <element name='Id'><text/></element>
-  <element name='RestId'><text/></element>
-  <element name='Title'><text/></element>
-  <element name='ExternalUrl'><text/></element>
-  <element name='JobDescription'><text/></element>
-  <element name='JobPageUrl'><text/></element>
-  <element name='Location'><text/></element>
-  <element name='LocationType'><text/></element>
-  <element name='SeniorityLevel'><text/></element>
-  <element name='Team'><text/></element>
-  <element name='CompanyName'><text/></element>
-  <element name='CompanyLogoUrl'><text/></element>
-</element>";
+        private string SampleRng() => @"<grammar xmlns='http://relaxng.org/ns/structure/1.0'>
+  <start>
+    <element name='JobPostings'>
+      <oneOrMore>
+        <element name='JobPosting'>
+          <element name='Id'><text/></element>
+          <element name='RestId'><text/></element>
+          <element name='Title'><text/></element>
+          <element name='ExternalUrl'><text/></element>
+          <element name='JobPageUrl'><text/></element>
+          <element name='Location'><text/></element>
+          <element name='CompanyName'><text/></element>
+          <element name='CompanyLogoUrl'><text/></element>
+        </element>
+      </oneOrMore>
+    </element>
+  </start>
+</grammar>";
+
+     
+        [XmlRoot("JobPostings")]
+        public class JobPostingsWrapper
+        {
+            [XmlElement("JobPosting")]
+            public List<JobPosting> Items { get; set; } = new List<JobPosting>();
+        }
+
     }
 }
 

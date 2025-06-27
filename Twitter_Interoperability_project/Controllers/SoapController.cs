@@ -45,7 +45,7 @@ namespace Twitter_Interoperability_project.Controllers
 
                 var soapResponse = await response.Content.ReadAsStringAsync();
 
-                // Save last SOAP response for debugging
+                
                 try
                 {
                     Directory.CreateDirectory("App_Data");
@@ -56,7 +56,7 @@ namespace Twitter_Interoperability_project.Controllers
                     ViewBag.SoapError = "Could not save SOAP response for debugging: " + ex.Message;
                 }
 
-                // Parse SOAP XML
+              
                 XDocument xdoc;
                 try
                 {
@@ -76,7 +76,7 @@ namespace Twitter_Interoperability_project.Controllers
                     return View("Index");
                 }
 
-                // --- FIX: Unescape and parse the inner XML ---
+               
                 var innerXml = searchResultsNode.Value ?? searchResultsNode.FirstNode?.ToString();
                 var unescapedXml = System.Net.WebUtility.HtmlDecode(innerXml);
                 var innerDoc = XDocument.Parse(unescapedXml);

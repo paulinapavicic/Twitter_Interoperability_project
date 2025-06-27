@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -12,14 +13,20 @@ namespace Twitter_Interoperability_project.Controllers
     public class RestController : Controller
     {
 
-        private readonly string apiUrl = "https://twitter154.p.rapidapi.com/user/tweets";
+        private readonly string apiUrl = "https://twitter154.p.rapidapi.com/user/details";
         private readonly string apiKey = "f0c3be805emsh767cbcd3c6c4040p18cb0ejsndcda90a0978b";
         private readonly string apiHost = "twitter154.p.rapidapi.com";
-      
         private const string dataPath = "App_Data/twitterusers.json";
+        private readonly IAntiforgery _antiforgery;
+
+        public RestController(IAntiforgery antiforgery)
+        {
+            _antiforgery = antiforgery;
+        }
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ImportJson(string username)
         {
             try
@@ -33,23 +40,21 @@ namespace Twitter_Interoperability_project.Controllers
                     var response = await client.GetAsync(url);
                     var json = await response.Content.ReadAsStringAsync();
 
-                   
-                    var apiResponse = JObject.Parse(json);
-                    var users = apiResponse["results"]? 
-                        .Select(t => t["user"]?.ToObject<TwitterUser>())
-                        .Where(u => u != null)
-                        .ToList();
+                    
+                    var user = JObject.Parse(json).ToObject<TwitterUser>();
 
-                    if (users == null || users.Count == 0)
+                    if (user == null)
                     {
                         ViewBag.JobInfo = "No user data found in the response.";
                         return View("Index");
                     }
 
                    
+                    var users = new List<TwitterUser> { user };
                     SaveUsers(users);
+
                     ViewBag.JsonImported = true;
-                    ViewBag.JobInfo = $"Imported {users.Count} users successfully!";
+                    ViewBag.JobInfo = $"Imported user '{user.username}' successfully!";
                 }
             }
             catch (Exception ex)
@@ -60,10 +65,17 @@ namespace Twitter_Interoperability_project.Controllers
             return View("Index");
         }
 
+        [HttpGet]
+        public IActionResult GetUsersTable()
+        {
+            ViewBag.Users = LoadUsers();
+            return PartialView("_UsersTable");
+        }
 
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult CreateUser(TwitterUser user)
         {
             var users = LoadUsers();
@@ -80,6 +92,7 @@ namespace Twitter_Interoperability_project.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult UpdateUser(string userId, TwitterUser updatedUser)
         {
             var users = LoadUsers();
@@ -105,6 +118,7 @@ namespace Twitter_Interoperability_project.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult DeleteUser(string userId)
         {
             var users = LoadUsers();
@@ -157,6 +171,10 @@ namespace Twitter_Interoperability_project.Controllers
 
             ViewBag.Users = LoadUsers(); 
             ViewBag.Imported = System.IO.File.Exists(dataPath) && new System.IO.FileInfo(dataPath).Length > 0;
+
+            
+            var tokens = _antiforgery.GetAndStoreTokens(HttpContext);
+            ViewBag.AntiForgeryToken = tokens.RequestToken;
             return View();
         }
 

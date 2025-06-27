@@ -14,7 +14,7 @@ namespace Twitter_Interoperability_project.Controllers
         private readonly XmlValidationService _validator;
         private readonly IMinioClient _minio;
         private readonly string _bucketName = "interoperability";
-        private readonly string _xsdPath = "wwwroot/schema/jobposting.xsd"; 
+        private readonly string _xsdPath = "wwwroot/schema/jobpostings.xsd"; 
 
         public XsdController(IConfiguration configuration)
         {
@@ -26,6 +26,14 @@ namespace Twitter_Interoperability_project.Controllers
                 .WithCredentials(configuration["MinIO:AccessKey"], configuration["MinIO:SecretKey"])
                 .Build();
         }
+
+        [XmlRoot("JobPostings")]
+        public class JobPostingsWrapper
+        {
+            [XmlElement("JobPosting")]
+            public List<JobPosting> Items { get; set; } = new List<JobPosting>();
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -64,7 +72,7 @@ namespace Twitter_Interoperability_project.Controllers
                     var objectName = $"jobpostings/{Guid.NewGuid()}.xml";
                     await SaveToMinio(model.XmlData, objectName);
 
-                    var job = DeserializeJobPosting(model.XmlData);
+                    var job = DeserializeJobPostings(model.XmlData);
                     model.JobPostings = await ListJobPostingsAsync();
 
 
@@ -111,11 +119,11 @@ namespace Twitter_Interoperability_project.Controllers
                     .WithContentType("application/xml"));
         }
 
-        private JobPosting DeserializeJobPosting(string xmlData)
+        private JobPostingsWrapper DeserializeJobPostings(string xmlData)
         {
-            var serializer = new XmlSerializer(typeof(JobPosting));
+            var serializer = new XmlSerializer(typeof(JobPostingsWrapper));
             using var reader = new StringReader(xmlData);
-            return (JobPosting)serializer.Deserialize(reader);
+            return (JobPostingsWrapper)serializer.Deserialize(reader);
         }
 
         private async Task<List<JobPosting>> ListJobPostingsAsync()
@@ -150,7 +158,8 @@ namespace Twitter_Interoperability_project.Controllers
 
                     ms.Seek(0, SeekOrigin.Begin);
                     var xmlContent = Encoding.UTF8.GetString(ms.ToArray());
-                    postings.Add(DeserializeJobPosting(xmlContent));
+                    var wrapper = DeserializeJobPostings(xmlContent);
+                    postings.AddRange(wrapper.Items);
                 }
             }
             catch (Exception ex)
@@ -164,21 +173,20 @@ namespace Twitter_Interoperability_project.Controllers
         private string SampleXml()
         {
             var newId = Guid.NewGuid().ToString();
-            return $@"<JobPosting>
-  <Id>{newId}</Id>
-  <RestId>1766819008026931200</RestId>
-  <Title>Senior Python Developer</Title>
-  <ExternalUrl>https://jobs.smartrecruiters.com/Devoteam/743999972803753-senior-python-developer</ExternalUrl>
-  <JobDescription>Devoteam is a leading consulting firm focused on digital strategy...</JobDescription>
-  <JobPageUrl>https://x.com/i/jobs/1766819008026931200</JobPageUrl>
-  <Location>Machelen, Vlaams Gewest, be</Location>
-  <LocationType>onsite</LocationType>
-  <SeniorityLevel>senior</SeniorityLevel>
-  <Team>Development</Team>
-  <CompanyName>Devoteam</CompanyName>
-  <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1082991650794889217/h4Bo8Z5E_normal.jpg</CompanyLogoUrl>
-</JobPosting>";
+            return $@"<JobPostings>
+  <JobPosting>
+    <Id>{newId}</Id>
+    <RestId>1766819008026931200</RestId>
+    <Title>Senior Python Developer</Title>
+    <ExternalUrl>https://jobs.smartrecruiters.com/Devoteam/743999972803753-senior-python-developer</ExternalUrl>
+    <JobPageUrl>https://x.com/i/jobs/1766819008026931200</JobPageUrl>
+    <Location>Machelen, Vlaams Gewest, be</Location>
+    <CompanyName>Devoteam</CompanyName>
+    <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1082991650794889217/h4Bo8Z5E_normal.jpg</CompanyLogoUrl>
+  </JobPosting>
+</JobPostings>";
         }
+
 
     }
 }
