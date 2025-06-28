@@ -41,6 +41,12 @@
         border: 1px solid #ccc;
         border-radius: 3px;
     }
+
+    .btn-secondary{
+        color:white;
+        background-color: darkgreen;
+        border: none;
+    }
 </style>
 
 <div class="validator-container">
@@ -49,12 +55,15 @@
             <label class="validator-label" for="xmlData">XML data to validate</label>
             <textarea id="xmlData" name="XmlData" class="validator-textarea">@Model.XmlData</textarea>
         </div>
+
+        <button type="submit" name="submit" value="Validate" class="btn btn-primary" style="float:right;">Validate</button>
+        <button type="submit" name="submit" value="Sample" class="btn btn-secondary">Load Sample Data</button>
+
         <div class="validator-section">
             <label class="validator-label" for="rngData">XML schema (RNG) data</label>
             <textarea id="rngData" name="RngData" class="validator-textarea">@Model.RngData</textarea>
         </div>
-        <button type="submit" name="submit" value="Validate" class="btn btn-primary" style="float:right;">Validate</button>
-        <button type="submit" name="submit" value="Sample" class="btn btn-secondary">Sample Data</button>
+       
         <div style="clear:both;"></div>
     </form>
 

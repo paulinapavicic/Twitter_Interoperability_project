@@ -14,7 +14,7 @@
 <hr />
 
 
-<!-- Step 1: Search & Import -->
+
 <div class="card mb-4">
     <div class="card-header bg-primary text-white">Step 1: Search Twitter User</div>
     <div class="card-body">
@@ -37,11 +37,11 @@
 
 
 
-<!-- CRUD Operations -->
+
 <div class="card mb-4">
     <div class="card-header bg-success text-white">Manage Users</div>
     <div class="card-body">
-        <!-- Create -->
+       
         <h5>Create New User</h5>
         <form asp-action="CreateUser" method="post" class="mb-4" id="createForm">
             <div class="row g-3">
@@ -73,7 +73,7 @@
             </div>
         </form>
 
-        <!-- Update -->
+       
         <h5>Update User</h5>
         <form asp-action="UpdateUser" method="post" class="mb-4" id="updateForm">
             <div class="row g-3">
@@ -133,7 +133,7 @@
 
 @section Scripts {
     <script>
-        // Function to refresh the user table
+        
         function refreshUserTable() {
             $.ajax({
                 url: '@Url.Action("GetUsersTable", "Rest")',
@@ -147,21 +147,21 @@
             });
         }
 
-        // Modify your import form to auto-refresh table after success
+     
         function importUser() {
-            var username = $('#usernameInput').val(); // Adjust ID as needed
+            var username = $('#usernameInput').val(); 
             
             $.ajax({
                 url: '@Url.Action("ImportJson", "Rest")',
                 type: 'POST',
                 data: { username: username },
                 success: function(response) {
-                    // Show success message
+                    
                     if (response.success) {
                         alert('User imported successfully!');
-                        // Auto-refresh the table
+                       
                         refreshUserTable();
-                        // Clear the input
+                        
                         $('#usernameInput').val('');
                     } else {
                         alert('Error importing user: ' + response.message);
@@ -173,7 +173,7 @@
             });
         }
 
-        // Your existing populateUpdateForm function
+        
         function populateUpdateForm(userId, username, name, followerCount, followingCount, description, location, profilePicUrl) {
             var form = document.getElementById('updateForm');
             form.querySelector('input[name="userId"]').value = userId;

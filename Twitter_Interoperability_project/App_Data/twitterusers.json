@@ -3,20 +3,10 @@
     "user_id": "44196397",
     "username": "elonmusk",
     "name": "Elon Musk",
-    "follower_count": 221313775,
-    "following_count": 1148,
+    "follower_count": 221355843,
+    "following_count": 1149,
     "description": "",
     "location": "",
     "profile_pic_url": "https://pbs.twimg.com/profile_images/1936002956333080576/kqqe2iWO_normal.jpg"
-  },
-  {
-    "user_id": "44196398",
-    "username": "testuser",
-    "name": "Anja",
-    "follower_count": 78,
-    "following_count": 78,
-    "description": "Fake news",
-    "location": "Croatia",
-    "profile_pic_url": "https://pbs.twimg.com/profile_images/1400100770624720898/-HC7kL5x_normal.jpg"
   }
 ]

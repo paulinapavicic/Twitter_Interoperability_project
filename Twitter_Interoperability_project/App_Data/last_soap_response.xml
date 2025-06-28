@@ -3,15 +3,14 @@
     <SearchJobPostingsResponse xmlns="http://tempuri.org/">
       <SearchJobPostingsResult>&lt;SearchResults&gt;
   &lt;JobPosting&gt;
-    &lt;Id&gt;QXBpSm9iUmVzdWx0czoxOTIwODU4MzQ0MTgyNzM4OTQ0&lt;/Id&gt;
-    &lt;RestId&gt;1920858344182738944&lt;/RestId&gt;
-    &lt;Title&gt;Senior Software Engineer&lt;/Title&gt;
-    &lt;ExternalUrl&gt;https://www.jobposting.pro/emploi-2164019-211#postuler&lt;/ExternalUrl&gt;
-    &lt;JobDescription&gt;Senior Software Engineer&lt;/JobDescription&gt;
-    &lt;JobPageUrl&gt;https://www.jobposting.pro/emploi-2164019-211#postuler&lt;/JobPageUrl&gt;
-    &lt;Location&gt;Kortrijk, Belgium&lt;/Location&gt;
-    &lt;CompanyName&gt;Jobposting&lt;/CompanyName&gt;
-    &lt;CompanyLogoUrl&gt;https://pbs.twimg.com/profile_images/1807185155808796672/pNSQEYsn_normal.jpg&lt;/CompanyLogoUrl&gt;
+    &lt;Id&gt;QXBpSm9iUmVzdWx0czoxOTM0NjY3MjY0MTAxNjM0MDQ5&lt;/Id&gt;
+    &lt;RestId&gt;1934667264101634049&lt;/RestId&gt;
+    &lt;Title&gt;Senior Python Developer&lt;/Title&gt;
+    &lt;ExternalUrl&gt;https://apply.workable.com/j/64CE322552&lt;/ExternalUrl&gt;
+    &lt;JobPageUrl&gt;https://apply.workable.com/j/64CE322552&lt;/JobPageUrl&gt;
+    &lt;Location&gt;Istanbul, İstanbul, Turkey&lt;/Location&gt;
+    &lt;CompanyName&gt;Huawei&lt;/CompanyName&gt;
+    &lt;CompanyLogoUrl&gt;https://pbs.twimg.com/profile_images/1570731236171329537/6Muib5Hc_normal.jpg&lt;/CompanyLogoUrl&gt;
   &lt;/JobPosting&gt;
 &lt;/SearchResults&gt;</SearchJobPostingsResult>
     </SearchJobPostingsResponse>

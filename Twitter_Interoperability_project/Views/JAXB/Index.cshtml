@@ -4,14 +4,40 @@
 @{
     ViewData["Title"] = "JAXB XML Validation";
 }
-<h2>JAXB XML Validation</h2>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 
-<form asp-action="ValidateXml" method="post">
-    <button type="submit" class="btn btn-primary">Validate jobpostings.xml</button>
-</form>
+<div class="container" style="max-width: 600px; margin-top: 2.5em;">
+    <div class="card shadow">
+        <div class="card-header bg-success text-white d-flex align-items-center">
+            <span>JAXB XML Validation</span>
+        </div>
+        <div class="card-body">
+            <form asp-action="ValidateXml" method="post" class="mb-3">
+                <button type="submit" class="btn btn-success btn-lg" style="font-weight:600; border-radius: 25px;">
+                    <span style="font-size:1.2em;">✔️</span> Validate jobpostings.xml
+                </button>
+            </form>
 
-@if (ViewBag.JaxbValidationResult != null)
-{
-    <h4>Validation Result:</h4>
-    <pre>@ViewBag.JaxbValidationResult</pre>
-}
+            @if (ViewBag.JaxbValidationResult != null)
+            {
+                <div class="mt-4">
+                    <h5 class="mb-3" style="font-weight:600;">Validation Result:</h5>
+                    @if (ViewBag.JaxbValidationResult.ToString().ToLower().Contains("error"))
+                    {
+                        <div class="alert alert-danger d-flex align-items-center" style="font-family:monospace;">
+                            <span style="font-size:1.5em; margin-right:0.5em;">❌</span>
+                            <span>@Html.Raw(ViewBag.JaxbValidationResult)</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-success d-flex align-items-center" style="font-family:monospace;">
+                            <span style="font-size:1.5em; margin-right:0.5em;">✅</span>
+                            <span>@Html.Raw(ViewBag.JaxbValidationResult)</span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
