@@ -63,10 +63,10 @@
                         <div class="alert alert-danger mt-3">@TempData["XmlError"]</div>
                     }
 
-                    @if (ViewBag.SoapResultsXml != null)
+                    @if (ViewBag.SoapResultsXml != null && ((IEnumerable<dynamic>)ViewBag.JobPostings).Any())
                     {
                         <label class="mt-3 font-weight-bold">Raw SOAP Search Results (XML):</label>
-                        <textarea class="form-control" rows="8" readonly style="font-family:monospace;">@ViewBag.SoapResultsXml</textarea>
+                        <textarea class="form-control" rows="12" readonly style="font-family:monospace;">@ViewBag.SoapResultsXml</textarea>
                     }
                 </div>
             </div>

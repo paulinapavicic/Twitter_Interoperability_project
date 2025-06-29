@@ -1,16 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <JobPostings>
   <JobPosting>
-    <Id>QXBpSm9iUmVzdWx0czoxOTA1Mjk2OTA1ODg3OTczMzc2</Id>
-    <RestId>1905296905887973376</RestId>
-    <Title>Senior Python Developer</Title>
-    <ExternalUrl>https://www.jobposting.pro/emploi-2096417-211#postuler</ExternalUrl>
-    <JobPageUrl>https://www.jobposting.pro/emploi-2096417-211#postuler</JobPageUrl>
-    <Location>Warszawa, Poland</Location>
-    <CompanyName>Jobposting</CompanyName>
-    <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1807185155808796672/pNSQEYsn_normal.jpg</CompanyLogoUrl>
-  </JobPosting>
-  <JobPosting>
     <Id>QXBpSm9iUmVzdWx0czoxOTI1MjgyMzQ3ODkwNzQ1MzQ1</Id>
     <RestId>1925282347890745345</RestId>
     <Title>Senior Python Developer</Title>
@@ -31,6 +21,36 @@
     <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1655944489855516672/1d9xxaPP_normal.jpg</CompanyLogoUrl>
   </JobPosting>
   <JobPosting>
+    <Id>QXBpSm9iUmVzdWx0czoxOTI1MjgyMzM0ODQyMjQxMDI0</Id>
+    <RestId>1925282334842241024</RestId>
+    <Title>Senior Python Developer</Title>
+    <ExternalUrl>https://devitjobs.uk/jobs/Syntax-Consultancy-Ltd-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</ExternalUrl>
+    <JobPageUrl>https://devitjobs.uk/jobs/Syntax-Consultancy-Ltd-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</JobPageUrl>
+    <Location>London, London, UK</Location>
+    <CompanyName>SwissDevJobs.ch</CompanyName>
+    <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1655944489855516672/1d9xxaPP_normal.jpg</CompanyLogoUrl>
+  </JobPosting>
+  <JobPosting>
+    <Id>QXBpSm9iUmVzdWx0czoxOTA1Mjk2OTA1ODg3OTczMzc2</Id>
+    <RestId>1905296905887973376</RestId>
+    <Title>Senior Python Developer</Title>
+    <ExternalUrl>https://www.jobposting.pro/emploi-2096417-211#postuler</ExternalUrl>
+    <JobPageUrl>https://www.jobposting.pro/emploi-2096417-211#postuler</JobPageUrl>
+    <Location>Warszawa, Poland</Location>
+    <CompanyName>Jobposting</CompanyName>
+    <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1807185155808796672/pNSQEYsn_normal.jpg</CompanyLogoUrl>
+  </JobPosting>
+  <JobPosting>
+    <Id>QXBpSm9iUmVzdWx0czoxOTI1MjgyMzQ1MTIyNTA0NzA1</Id>
+    <RestId>1925282345122504705</RestId>
+    <Title>Senior Python Developer</Title>
+    <ExternalUrl>https://devitjobs.uk/jobs/Humand-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</ExternalUrl>
+    <JobPageUrl>https://devitjobs.uk/jobs/Humand-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</JobPageUrl>
+    <Location>Oxford, South East, UK</Location>
+    <CompanyName>SwissDevJobs.ch</CompanyName>
+    <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1655944489855516672/1d9xxaPP_normal.jpg</CompanyLogoUrl>
+  </JobPosting>
+  <JobPosting>
     <Id>QXBpSm9iUmVzdWx0czoxOTA2Nzk0ODc5MjE0Mzk1Mzky</Id>
     <RestId>1906794879214395392</RestId>
     <Title>Senior Python Developer</Title>
@@ -41,12 +61,22 @@
     <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1807185155808796672/pNSQEYsn_normal.jpg</CompanyLogoUrl>
   </JobPosting>
   <JobPosting>
-    <Id>QXBpSm9iUmVzdWx0czoxOTI1MjgyMzM0ODQyMjQxMDI0</Id>
-    <RestId>1925282334842241024</RestId>
+    <Id>QXBpSm9iUmVzdWx0czoxOTI1MjgyMzUyOTMyMjk4NzUy</Id>
+    <RestId>1925282352932298752</RestId>
     <Title>Senior Python Developer</Title>
-    <ExternalUrl>https://devitjobs.uk/jobs/Syntax-Consultancy-Ltd-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</ExternalUrl>
-    <JobPageUrl>https://devitjobs.uk/jobs/Syntax-Consultancy-Ltd-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</JobPageUrl>
-    <Location>London, London, UK</Location>
+    <ExternalUrl>https://devitjobs.uk/jobs/Harvey-Nash-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</ExternalUrl>
+    <JobPageUrl>https://devitjobs.uk/jobs/Harvey-Nash-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</JobPageUrl>
+    <Location>Leeds, Yorkshire and the Humber, UK</Location>
+    <CompanyName>SwissDevJobs.ch</CompanyName>
+    <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1655944489855516672/1d9xxaPP_normal.jpg</CompanyLogoUrl>
+  </JobPosting>
+  <JobPosting>
+    <Id>QXBpSm9iUmVzdWx0czoxOTI1MjgyMzQwNDI5MDc4NTI5</Id>
+    <RestId>1925282340429078529</RestId>
+    <Title>Senior Python Developer</Title>
+    <ExternalUrl>https://devitjobs.uk/jobs/Tenth-Revolution-Group-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</ExternalUrl>
+    <JobPageUrl>https://devitjobs.uk/jobs/Tenth-Revolution-Group-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</JobPageUrl>
+    <Location>City of London, London, UK</Location>
     <CompanyName>SwissDevJobs.ch</CompanyName>
     <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1655944489855516672/1d9xxaPP_normal.jpg</CompanyLogoUrl>
   </JobPosting>
@@ -61,42 +91,12 @@
     <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1655944489855516672/1d9xxaPP_normal.jpg</CompanyLogoUrl>
   </JobPosting>
   <JobPosting>
-    <Id>QXBpSm9iUmVzdWx0czoxOTI1MjgyMzUyOTMyMjk4NzUy</Id>
-    <RestId>1925282352932298752</RestId>
-    <Title>Senior Python Developer</Title>
-    <ExternalUrl>https://devitjobs.uk/jobs/Harvey-Nash-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</ExternalUrl>
-    <JobPageUrl>https://devitjobs.uk/jobs/Harvey-Nash-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</JobPageUrl>
-    <Location>Leeds, Yorkshire and the Humber, UK</Location>
-    <CompanyName>SwissDevJobs.ch</CompanyName>
-    <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1655944489855516672/1d9xxaPP_normal.jpg</CompanyLogoUrl>
-  </JobPosting>
-  <JobPosting>
     <Id>QXBpSm9iUmVzdWx0czoxOTI1MjgyMzUwOTIzMjI3MTM5</Id>
     <RestId>1925282350923227139</RestId>
     <Title>Senior Python Developer</Title>
     <ExternalUrl>https://devitjobs.uk/jobs/Tech4-Ltd-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</ExternalUrl>
     <JobPageUrl>https://devitjobs.uk/jobs/Tech4-Ltd-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</JobPageUrl>
     <Location>Shadwell, West Midlands, UK</Location>
-    <CompanyName>SwissDevJobs.ch</CompanyName>
-    <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1655944489855516672/1d9xxaPP_normal.jpg</CompanyLogoUrl>
-  </JobPosting>
-  <JobPosting>
-    <Id>QXBpSm9iUmVzdWx0czoxOTI1MjgyMzQ1MTIyNTA0NzA1</Id>
-    <RestId>1925282345122504705</RestId>
-    <Title>Senior Python Developer</Title>
-    <ExternalUrl>https://devitjobs.uk/jobs/Humand-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</ExternalUrl>
-    <JobPageUrl>https://devitjobs.uk/jobs/Humand-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</JobPageUrl>
-    <Location>Oxford, South East, UK</Location>
-    <CompanyName>SwissDevJobs.ch</CompanyName>
-    <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1655944489855516672/1d9xxaPP_normal.jpg</CompanyLogoUrl>
-  </JobPosting>
-  <JobPosting>
-    <Id>QXBpSm9iUmVzdWx0czoxOTI1MjgyMzQwNDI5MDc4NTI5</Id>
-    <RestId>1925282340429078529</RestId>
-    <Title>Senior Python Developer</Title>
-    <ExternalUrl>https://devitjobs.uk/jobs/Tenth-Revolution-Group-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</ExternalUrl>
-    <JobPageUrl>https://devitjobs.uk/jobs/Tenth-Revolution-Group-Senior-Python-Developer?utm_source=tt_hiring&amp;utm_medium=tt_hiring&amp;utm_campaign=tt_hiring</JobPageUrl>
-    <Location>City of London, London, UK</Location>
     <CompanyName>SwissDevJobs.ch</CompanyName>
     <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1655944489855516672/1d9xxaPP_normal.jpg</CompanyLogoUrl>
   </JobPosting>
@@ -121,6 +121,16 @@
     <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1485741619756380161/auuzqDGm_normal.jpg</CompanyLogoUrl>
   </JobPosting>
   <JobPosting>
+    <Id>QXBpSm9iUmVzdWx0czoxOTM0NDcyNTY3NjMwNTI4NTEz</Id>
+    <RestId>1934472567630528513</RestId>
+    <Title>Senior Python Developer</Title>
+    <ExternalUrl>https://apply.workable.com/j/7281C700C4</ExternalUrl>
+    <JobPageUrl>https://apply.workable.com/j/7281C700C4</JobPageUrl>
+    <Location>Warsaw, Masovian Voivodeship, Poland</Location>
+    <CompanyName></CompanyName>
+    <CompanyLogoUrl></CompanyLogoUrl>
+  </JobPosting>
+  <JobPosting>
     <Id>QXBpSm9iUmVzdWx0czoxOTI4MjY4ODg3NDQ1MDk4NTAx</Id>
     <RestId>1928268887445098501</RestId>
     <Title>Senior Python Developer</Title>
@@ -131,12 +141,12 @@
     <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1927695239692812288/kY4UF97-_normal.jpg</CompanyLogoUrl>
   </JobPosting>
   <JobPosting>
-    <Id>QXBpSm9iUmVzdWx0czoxOTM0NDcyNTY3NjMwNTI4NTEz</Id>
-    <RestId>1934472567630528513</RestId>
+    <Id>QXBpSm9iUmVzdWx0czoxOTM3NDExMjE3NzA4MTg3NjQ5</Id>
+    <RestId>1937411217708187649</RestId>
     <Title>Senior Python Developer</Title>
-    <ExternalUrl>https://apply.workable.com/j/7281C700C4</ExternalUrl>
-    <JobPageUrl>https://apply.workable.com/j/7281C700C4</JobPageUrl>
-    <Location>Warsaw, Masovian Voivodeship, Poland</Location>
+    <ExternalUrl>https://apply.workable.com/j/EC76589515</ExternalUrl>
+    <JobPageUrl>https://apply.workable.com/j/EC76589515</JobPageUrl>
+    <Location>Armenia</Location>
     <CompanyName></CompanyName>
     <CompanyLogoUrl></CompanyLogoUrl>
   </JobPosting>
@@ -151,52 +161,42 @@
     <CompanyLogoUrl></CompanyLogoUrl>
   </JobPosting>
   <JobPosting>
-    <Id>QXBpSm9iUmVzdWx0czoxOTM3NDExMjE3NzA4MTg3NjQ5</Id>
-    <RestId>1937411217708187649</RestId>
+    <Id>QXBpSm9iUmVzdWx0czoxOTMzNjc4MDA5OTY3NjUyODY4</Id>
+    <RestId>1933678009967652868</RestId>
     <Title>Senior Python Developer</Title>
-    <ExternalUrl>https://apply.workable.com/j/EC76589515</ExternalUrl>
-    <JobPageUrl>https://apply.workable.com/j/EC76589515</JobPageUrl>
-    <Location>Armenia</Location>
+    <ExternalUrl>https://www.careers-page.com/boardroom-appointments/job/QYY899VV?utm_medium=free_job_board&amp;utm_source=x-formerly-twitter</ExternalUrl>
+    <JobPageUrl>https://www.careers-page.com/boardroom-appointments/job/QYY899VV?utm_medium=free_job_board&amp;utm_source=x-formerly-twitter</JobPageUrl>
+    <Location>Cape Town, Western Cape, South Africa</Location>
     <CompanyName></CompanyName>
     <CompanyLogoUrl></CompanyLogoUrl>
   </JobPosting>
   <JobPosting>
-    <Id>QXBpSm9iUmVzdWx0czoxOTIwODgwNzI3OTcxMDMzMDg4</Id>
-    <RestId>1920880727971033088</RestId>
+    <Id>QXBpSm9iUmVzdWx0czoxOTE5NzgxNzUzMjk4MDUxMDcy</Id>
+    <RestId>1919781753298051072</RestId>
     <Title>Senior Python Developer</Title>
-    <ExternalUrl>https://jobs.smartrecruiters.com/SopraSteria1/744000058567499-senior-python-developer</ExternalUrl>
-    <JobPageUrl>https://jobs.smartrecruiters.com/SopraSteria1/744000058567499-senior-python-developer</JobPageUrl>
-    <Location>Nieuwegein, UT, nl</Location>
-    <CompanyName>Soprasteria</CompanyName>
-    <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1676616900548198400/YJE6twx8_normal.jpg</CompanyLogoUrl>
+    <ExternalUrl>https://jobs.smartrecruiters.com/Devoteam/744000057609255-senior-python-developer</ExternalUrl>
+    <JobPageUrl>https://jobs.smartrecruiters.com/Devoteam/744000057609255-senior-python-developer</JobPageUrl>
+    <Location>Lëtzebuerg, Lëtzebuerg, lu</Location>
+    <CompanyName>Devoteam</CompanyName>
+    <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1082991650794889217/h4Bo8Z5E_normal.jpg</CompanyLogoUrl>
   </JobPosting>
   <JobPosting>
-    <Id>QXBpSm9iUmVzdWx0czoxOTIyNzQyNTgwNDcyODQwMTkz</Id>
-    <RestId>1922742580472840193</RestId>
+    <Id>QXBpSm9iUmVzdWx0czoxOTMyNjI4NTc4NDg0ODI2MTE2</Id>
+    <RestId>1932628578484826116</RestId>
     <Title>Senior Python Developer</Title>
-    <ExternalUrl>https://jobs.smartrecruiters.com/Version1/744000059014635-senior-python-developer</ExternalUrl>
-    <JobPageUrl>https://jobs.smartrecruiters.com/Version1/744000059014635-senior-python-developer</JobPageUrl>
+    <ExternalUrl>https://apply.officedroid.com/j/8AAD0424A4</ExternalUrl>
+    <JobPageUrl>https://apply.officedroid.com/j/8AAD0424A4</JobPageUrl>
+    <Location>Paris, Île-de-France, France</Location>
+    <CompanyName></CompanyName>
+    <CompanyLogoUrl></CompanyLogoUrl>
+  </JobPosting>
+  <JobPosting>
+    <Id>QXBpSm9iUmVzdWx0czoxOTI4NTY2NDY4NjIwNTQxOTUy</Id>
+    <RestId>1928566468620541952</RestId>
+    <Title>Senior Python Developer</Title>
+    <ExternalUrl>https://jobs.smartrecruiters.com/Version1/744000062393492-senior-python-developer</ExternalUrl>
+    <JobPageUrl>https://jobs.smartrecruiters.com/Version1/744000062393492-senior-python-developer</JobPageUrl>
     <Location>London, England, gb</Location>
-    <CompanyName>Version 1</CompanyName>
-    <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1805871928172834816/f58RAk5e_normal.png</CompanyLogoUrl>
-  </JobPosting>
-  <JobPosting>
-    <Id>QXBpSm9iUmVzdWx0czoxOTMyNjI4NTgwMjM4MDQ1MTg4</Id>
-    <RestId>1932628580238045188</RestId>
-    <Title>Senior Python Developer</Title>
-    <ExternalUrl>https://apply.officedroid.com/j/9F85478D5B</ExternalUrl>
-    <JobPageUrl>https://apply.officedroid.com/j/9F85478D5B</JobPageUrl>
-    <Location>Athens, Attica, Greece</Location>
-    <CompanyName></CompanyName>
-    <CompanyLogoUrl></CompanyLogoUrl>
-  </JobPosting>
-  <JobPosting>
-    <Id>QXBpSm9iUmVzdWx0czoxOTMyNDAyMTk5ODg5NjQ5NjY0</Id>
-    <RestId>1932402199889649664</RestId>
-    <Title>Senior Python Developer</Title>
-    <ExternalUrl>https://jobs.smartrecruiters.com/Version1/744000064261290-senior-python-developer</ExternalUrl>
-    <JobPageUrl>https://jobs.smartrecruiters.com/Version1/744000064261290-senior-python-developer</JobPageUrl>
-    <Location>Málaga, AN, es</Location>
     <CompanyName>Version 1</CompanyName>
     <CompanyLogoUrl>https://pbs.twimg.com/profile_images/1805871928172834816/f58RAk5e_normal.png</CompanyLogoUrl>
   </JobPosting>

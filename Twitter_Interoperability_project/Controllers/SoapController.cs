@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Xml.Linq;
+using System.Xml.XPath;
 using Twitter_Interoperability_project.Service;
 
 namespace Twitter_Interoperability_project.Controllers
@@ -56,19 +57,10 @@ namespace Twitter_Interoperability_project.Controllers
                     ViewBag.SoapError = "Could not save SOAP response for debugging: " + ex.Message;
                 }
 
-              
-                XDocument xdoc;
-                try
-                {
-                    xdoc = XDocument.Parse(soapResponse);
-                }
-                catch (System.Xml.XmlException ex)
-                {
-                    ViewBag.SoapError = "Malformed SOAP response: " + ex.Message;
-                    return View("Index");
-                }
-
-                var searchResultsNode = xdoc.Descendants().FirstOrDefault(e => e.Name.LocalName == "SearchJobPostingsResult");
+                
+                XDocument xdoc = XDocument.Parse(soapResponse);
+                var searchResultsNode = xdoc.Descendants()
+                    .FirstOrDefault(e => e.Name.LocalName == "SearchJobPostingsResult");
 
                 if (searchResultsNode == null)
                 {
@@ -77,25 +69,29 @@ namespace Twitter_Interoperability_project.Controllers
                 }
 
                
-                var innerXml = searchResultsNode.Value ?? searchResultsNode.FirstNode?.ToString();
-                var unescapedXml = System.Net.WebUtility.HtmlDecode(innerXml);
+                var unescapedXml = System.Net.WebUtility.HtmlDecode(searchResultsNode.Value);
                 var innerDoc = XDocument.Parse(unescapedXml);
 
-                var jobPostings = innerDoc
-                    .Descendants()
-                    .Where(e => e.Name.LocalName == "JobPosting")
-                    .Select(e => new
-                    {
-                        Title = e.Elements().FirstOrDefault(el => el.Name.LocalName == "Title")?.Value,
-                        CompanyName = e.Elements().FirstOrDefault(el => el.Name.LocalName == "CompanyName")?.Value,
-                        Location = e.Elements().FirstOrDefault(el => el.Name.LocalName == "Location")?.Value,
-                        JobDescription = e.Elements().FirstOrDefault(el => el.Name.LocalName == "JobDescription")?.Value
-                    })
-                    .ToList();
+                //XPath to filter job postings
+                string escapedTerm = term.Replace("'", "''"); 
+                string xpath = $"//JobPosting[contains(Title, '{escapedTerm}') " +
+                               $"or contains(CompanyName, '{escapedTerm}') " +
+                               $"or contains(Location, '{escapedTerm}')]";
+
+                var jobPostingNodes = innerDoc.XPathSelectElements(xpath);
+
+                var jobPostings = jobPostingNodes.Select(e => new
+                {
+                    Title = e.Element("Title")?.Value,
+                    CompanyName = e.Element("CompanyName")?.Value,
+                    Location = e.Element("Location")?.Value,
+                    JobDescription = e.Element("JobDescription")?.Value
+                }).ToList();
 
                 ViewBag.JobPostings = jobPostings;
                 ViewBag.SearchTerm = term;
                 ViewBag.SoapResultsXml = unescapedXml;
+
 
                 if (jobPostings.Any())
                     ViewBag.SoapMessage = $"Search completed successfully! {jobPostings.Count} result(s) found.";
