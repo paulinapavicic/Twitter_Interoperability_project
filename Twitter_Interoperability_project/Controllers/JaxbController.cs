@@ -55,7 +55,7 @@ namespace Twitter_Interoperability_project.Controllers
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
 
-            // Use ArgumentList for safety
+            
             process.StartInfo.ArgumentList.Add("-cp");
             process.StartInfo.ArgumentList.Add(".");
             process.StartInfo.ArgumentList.Add(javaClass);

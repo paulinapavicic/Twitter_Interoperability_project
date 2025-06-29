@@ -72,7 +72,7 @@ namespace Twitter_Interoperability_project.Controllers
                 var unescapedXml = System.Net.WebUtility.HtmlDecode(searchResultsNode.Value);
                 var innerDoc = XDocument.Parse(unescapedXml);
 
-                //XPath to filter job postings
+                //XPath for filtering
                 string escapedTerm = term.Replace("'", "''"); 
                 string xpath = $"//JobPosting[contains(Title, '{escapedTerm}') " +
                                $"or contains(CompanyName, '{escapedTerm}') " +

@@ -9,7 +9,7 @@ namespace Twitter_Interoperability_project.Service
     {
         private const string XmlFilePath = "App_Data/jobpostings.xml";
 
-        // Helper to normalize whitespace and case
+        
         private string NormalizeSpace(string input)
         {
             if (input == null) return "";

@@ -143,13 +143,13 @@ namespace Twitter_Interoperability_project.Controllers
                     }
                     catch
                     {
-                        // Skip invalid XML files
+                        
                     }
                 }
             }
             catch
             {
-                // Ignore errors for listing
+                
             }
             return postings;
         }
